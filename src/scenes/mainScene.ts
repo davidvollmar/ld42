@@ -4,7 +4,7 @@ import { Sheep } from '../sheep'
 export class MainScene extends Phaser.Scene {
 
   private world: World;
-  private sheep: Array<Sheep> = new Array();
+  private sheeps: Array<Sheep> = new Array();
 
   constructor() {
     super({
@@ -12,7 +12,7 @@ export class MainScene extends Phaser.Scene {
     });
     this.world = new World();
 
-    Array.from(Array(10).keys()).forEach(i => this.sheep[i] = new Sheep({ x: i * 64, y: i * 64 }, Math.random() * 360), null);
+    Array.from(Array(10).keys()).forEach(i => this.sheeps[i] = new Sheep({ x: i * 64, y: i * 64 }, Math.random() * Math.PI * 2), null);
 
   }
 
@@ -48,12 +48,12 @@ export class MainScene extends Phaser.Scene {
 
   create(): void {
     new WorldRenderer().render(this, this.world)
-    new SheepRenderer().render(this, this.sheep)
+    new SheepRenderer().render(this, this.sheeps)
   }
 
   update(): void {
-    this.sheep.forEach(baah => baah.moveRandom())
-    new SheepRenderUpdater().render(this, this.sheep)
+    this.sheeps.forEach(sheep => sheep.moveRandom())
+    new SheepRenderUpdater().render(this, this.sheeps)
   }
 }
 
@@ -78,11 +78,11 @@ class WorldRenderer implements Renderer<World> {
 }
 
 class SheepRenderer implements Renderer<Array<Sheep>> {
-  render(scene: Phaser.Scene, sheep: Array<Sheep>) {
-    sheep.forEach(beeh => {      
-      let sprite = scene.add.sprite(beeh.getPosition().x, beeh.getPosition().y, 'sheep')
+  render(scene: Phaser.Scene, sheeps: Array<Sheep>) {
+    sheeps.forEach(sheep => {      
+      let sprite = scene.add.sprite(sheep.getPosition().x, sheep.getPosition().y, 'sheep')
       sprite.setOrigin(0, 0)
-      sprite.setAngle(beeh.getAngle() + Math.PI / 2.0 )
+      sprite.setRotation(sheep.getRotation() + Math.PI / 2.0)
 
       let walk = scene.anims.create({
         key: 'beehmation',
@@ -93,18 +93,18 @@ class SheepRenderer implements Renderer<Array<Sheep>> {
 
       sprite.anims.play('beehmation')
 
-      beeh.setSprite(sprite)
+      sheep.setSprite(sprite)
     })
   }
 }
 
 class SheepRenderUpdater implements Renderer<Array<Sheep>> {
-  render(scene: Phaser.Scene, sheep: Array<Sheep>) {
-    sheep.forEach(baah => {
-      let sprite = baah.getSprite()
-      let position = baah.getPosition()
+  render(scene: Phaser.Scene, sheeps: Array<Sheep>) {
+    sheeps.forEach(sheep => {
+      let sprite = sheep.getSprite()
+      let position = sheep.getPosition()
       sprite.setPosition(position.x, position.y)
-      sprite.setAngle(baah.getAngle())
+      sprite.setRotation(sheep.getRotation() + Math.PI / 2.0)
     })
   }
 }
