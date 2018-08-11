@@ -8,6 +8,14 @@ export class Tile {
         this.tileType = tileType
         this.hasFence = false
     }
+
+    isPassable() : boolean {
+        if(this.hasFence) {
+            return false
+        } else {
+            return !Array(TileType.WATER0, TileType.WATER1, TileType.WATER3, TileType.WATER4, TileType.WATERCOR, TileType.WATERPAR).some(t => t == this.tileType)
+        }
+    }
 }
 
 export const enum Direction {
