@@ -17,8 +17,21 @@ export class MainScene extends Phaser.Scene {
   }
 
   preload(): void {
-    this.load.image(TileType.GRASS, "assets/Graphics/grass.png")
+    this.loadSpriteTiles()
     this.loadSpriteSheep()
+  }
+
+  loadSpriteTiles() {
+    this.load.image(TileType.GRASS, 'assets/Graphics/LandTiles/Grass.png')    
+    this.load.image(TileType.GRASSSHORT, 'assets/Graphics/LandTiles/GrassShort.png')
+    this.load.image(TileType.GRASSGONE, 'assets/Graphics/LandTiles/GrassGone.png')
+    this.load.image(TileType.WATER0, 'assets/Graphics/LandTiles/Water0.png')
+    this.load.image(TileType.WATER1, 'assets/Graphics/LandTiles/Water1.png')
+    this.load.image(TileType.WATERPAR, 'assets/Graphics/LandTiles/WaterPar.png')
+    this.load.image(TileType.WATERCOR, 'assets/Graphics/LandTiles/WaterCor.png')
+    this.load.image(TileType.WATER3, 'assets/Graphics/LandTiles/Water3.png')
+    this.load.image(TileType.WATER4, 'assets/Graphics/LandTiles/Water4.png')
+    this.load.image(TileType.FENCE, 'assets/Graphics/LandTiles/Fence.png')
   }
 
   loadSpriteSheep() {
@@ -49,7 +62,7 @@ interface Renderer<T> {
 }
 
 class WorldRenderer implements Renderer<World> {
-  private tileSize = 64
+  private tileSize = 128
 
   render(scene: Phaser.Scene, world: World) {
     let arrays = world.getTiles()
