@@ -12,7 +12,7 @@ export class MainScene extends Phaser.Scene {
   }
 
   preload(): void {
-    this.load.image(TileType.GRASS, "assets/fff.png")
+    this.load.image(TileType.GRASS, "assets/Graphics/grass.png")
   }
 
   create(): void {
@@ -25,7 +25,7 @@ export class MainScene extends Phaser.Scene {
 }
 
 class WorldRenderer implements Renderer<World> {
-  private tileSize = 32
+  private tileSize = 64
 
   render(scene: Phaser.Scene, world: World) {
     let arrays = world.getTiles()     

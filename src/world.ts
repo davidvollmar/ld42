@@ -41,6 +41,7 @@ export class Tile {
 
 export enum TileType {
     GRASS = "grass",
+    WATER = "water",
     LAND = "land",
     FENCE = "fence"
 }
