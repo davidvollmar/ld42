@@ -11,6 +11,7 @@ export class MainScene extends Phaser.Scene {
   private cursors: CursorKeys | null = null;
   private player: Physics.Arcade.Sprite | null = null;
 
+  private worldUpdateRequired = false
   private sheepCount = 100
 
   constructor() {
@@ -136,22 +137,25 @@ export class MainScene extends Phaser.Scene {
     }
   }
 
-  update(): void {
+  update(): void {    
+    if(this.worldUpdateRequired) {
+      new WorldRenderer().fence(this, this.world)
+    }
+
     this.farmerStuff()
 
     this.sheeps.forEach(sheep => sheep.moveRandom())
   }
 
   farmerStuff() {    
-    let cursors = this.cursors!
-    let player = this.player!
+    const cursors = this.cursors!
+    const player = this.player!
 
     const speed = 150;
     const prevVelocity = player.body.velocity.clone();
 
     // Stop any previous movement from the last frame
     player.body.setVelocity(0);
-
 
     // Horizontal movement
     if (cursors.left.isDown) {
@@ -165,6 +169,15 @@ export class MainScene extends Phaser.Scene {
       player.body.setVelocityY(-speed);
     } else if (cursors.down.isDown) {
       player.body.setVelocityY(speed);
+    }
+
+    if(cursors.space.isDown) {
+      let pos = { x: player.x, y: player.y }
+      let tileCoordinates = new WorldRenderer().worldToTileCoordinates(pos);
+      let tile = this.world.getTile(tileCoordinates)
+      tile.hasFence = true
+      this.worldUpdateRequired = true
+
     }
 
     // Normalize and scale the velocity so that player can't move faster along a diagonal
