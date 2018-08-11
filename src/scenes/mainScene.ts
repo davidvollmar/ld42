@@ -1,4 +1,4 @@
-import { World } from '../world'
+import { World, TileType } from '../world'
 
 export class MainScene extends Phaser.Scene {
  
@@ -12,7 +12,7 @@ export class MainScene extends Phaser.Scene {
   }
 
   preload(): void {
-    this.load.image("grass", "assets/fff.png")
+    this.load.image(TileType.GRASS, "assets/fff.png")
   }
 
   create(): void {
@@ -25,7 +25,7 @@ export class MainScene extends Phaser.Scene {
 }
 
 class WorldRenderer implements Renderer<World> {
-  private static tileSize = 32
+  private tileSize = 32
 
   render(scene: Phaser.Scene, world: World) {
     let arrays = world.getTiles()     
@@ -33,7 +33,8 @@ class WorldRenderer implements Renderer<World> {
       let tiles = arrays[x]      
       for(var y = 0 ; y < tiles.length; y++) {
         let tile = tiles[y]        
-        scene.add.sprite(x * WorldRenderer.tileSize, y * WorldRenderer.tileSize, tile.tileType);
+        let sprite = scene.add.sprite(x * this.tileSize, y * this.tileSize, tile.tileType);
+        sprite.setOrigin(0, 0);
       }
     }
   }

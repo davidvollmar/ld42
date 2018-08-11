@@ -12,7 +12,7 @@ export class World {
         for(let i = 0; i < 20; i++) {
             this.tiles[i] = new Array<Tile>()
             for(let j = 0 ; j < 20; j++) {
-                this.tiles[i][j] = {tileType: "grass"}
+                this.tiles[i][j] = {tileType: TileType.GRASS}
             }
         }        
     }
@@ -39,5 +39,8 @@ export class Tile {
     }     
 }
 
-export type TileType = "grass" | "land" | "fence" 
-
+export enum TileType {
+    GRASS = "grass",
+    LAND = "land",
+    FENCE = "fence"
+}
