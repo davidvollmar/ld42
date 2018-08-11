@@ -126,7 +126,7 @@ export class MainScene extends Phaser.Scene {
   }
 
   createPlayer() {
-    this.player = this.physics.add.sprite(512, 512, 'farmer-left', 0);
+    this.player = this.physics.add.sprite(512, 2048, 'farmer-left', 0);
 
     this.anims.create({
       key: 'farmer_walk_left',
@@ -222,8 +222,8 @@ export class MainScene extends Phaser.Scene {
     //update world if needed
     let pos = { x: this.player!.x, y: this.player!.y }    
     let tileCoordinates = WorldRenderer.worldToTileCoordinates(pos);
-    this.world.addMissingTilesInRadius(tileCoordinates, 6);
-    WorldRenderer.render(this, this.world); //TODO?
+    let needToRender = this.world.addMissingTilesInRadius(tileCoordinates, 6);
+    if (needToRender) { WorldRenderer.render(this, this.world); }
 
     //update sheep
     this.sheeps.forEach(sheep => sheep.moveRandom())

@@ -10,7 +10,7 @@ export class World {
 
     private minX = 0;
     private maxX = 100;
-    private minY = 100;
+    private minY = 0;
     private maxY = 100;
 
     constructor() {
@@ -27,24 +27,40 @@ export class World {
     }
 
     getTile(c: Coordinate): Tile | null {
-        return this.tiles[c.x][c.y];
+        if((this.tiles[c.x] || [])[0] === undefined) {
+            return null;
+        } else {
+            if(this.tiles[c.x][c.y] === undefined) {
+                return null;
+            } else {
+                return this.tiles[c.x][c.y];
+            }
+        }
     }
 
     getTiles(): Tile[][] {
         return this.tiles
     }
 
-    addMissingTilesInRadius(coord: Coordinate, radius: integer) {
+    addMissingTilesInRadius(coord: Coordinate, radius: integer): boolean {
+        let toReturn: boolean = false;
 
         for (var x = coord.x - radius; x < coord.x + radius; x++) {
-            for (var y = coord.y - radius; y < coord.y + radius; y++) {
-                //only continue within bounds
+            for (var y = coord.y - radius; y < coord.y + radius; y++) {              
                 if(!(x < this.minX || x > this.maxX || y < this.minY || y > this.maxY)) {
-                    let checkCoord = { x: x, y: y };
-                    //todo check arrays and add missing
+                    let tile = this.getTile({ x: x, y: y });
+                    if(tile === null) {
+                        if(this.tiles[x] === undefined) {                            
+                            this.tiles[x] = new Array<Tile>();
+                        }                        
+                        this.tiles[x][y] = new Tile(this.getRandomTileType());
+                        toReturn = true;
+                    }
                 }
             }
         }
+
+        return toReturn;
     }
 
     private getRandomTileType(): TileType {
