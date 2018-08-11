@@ -1,4 +1,5 @@
 import { Tile, TileType } from "./tile";
+import { WorldLoader } from './worldLoader'
 
 export class World {
 
@@ -9,6 +10,7 @@ export class World {
 
     constructor() {
         console.log("Init world")
+        new WorldLoader()
 
         this.tiles = new Array<Array<Tile>>()
         for (let i = 0; i < this.maxX; i++) {

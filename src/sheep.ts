@@ -5,10 +5,9 @@ export class Sheep {
     private rotation: number
     private sprite: Phaser.GameObjects.Sprite | null
 
-    constructor(position: Coordinate, angle: number) {
-        console.log("baah")
+    constructor(position: Coordinate, rotation: number) {        
         this.position = position
-        this.rotation = angle
+        this.rotation = rotation
         this.sprite = null
     }
 
