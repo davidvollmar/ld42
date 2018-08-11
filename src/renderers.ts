@@ -13,9 +13,10 @@ export class WorldRenderer {
                 let posX = x * this.tileSize
                 let posY = y * this.tileSize
                 let sprite = scene.add.sprite(posX, posY, tile.tileType);
+                tile.tileSprite = sprite
                 sprite.setOrigin(0, 0);
-                if (tile.hasFence) {
-                    scene.add.sprite(posX, posY, TileType.FENCE)
+                if (tile.hasFence && tile.fenceSprite == null) {
+                    tile.fenceSprite = scene.add.sprite(posX, posY, TileType.FENCE)
                 }
             }
         }
@@ -29,9 +30,10 @@ export class WorldRenderer {
                 let tile = tiles[y]
                 let posX = x * this.tileSize
                 let posY = y * this.tileSize
-                if (tile.hasFence) {
+                if (tile.hasFence && tile.fenceSprite == null) {
                     let fence = scene.add.sprite(posX, posY, TileType.FENCE)
                     fence.setOrigin(0, -.5)
+                    tile.fenceSprite = fence
                 }
             }
         }

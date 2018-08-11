@@ -1,5 +1,7 @@
 export class Tile {
     public tileType: TileType
+    public tileSprite: Phaser.GameObjects.Sprite | null = null
+    public fenceSprite: Phaser.GameObjects.Sprite | null = null
     public hasFence: Boolean
 
     constructor(tileType: TileType) {

@@ -15,7 +15,7 @@ export class World {
             this.tiles[i] = new Array<Tile>()
             for (let j = 0; j < this.maxY; j++) {
                 let type = this.getRandomTileType();
-                this.tiles[i][j] = { tileType: type, hasFence: false }
+                this.tiles[i][j] = new Tile(type)
             }
         }
     }
