@@ -114,25 +114,25 @@ export class MainScene extends Phaser.Scene {
     this.anims.create({
       key: 'farmer_walk_left',
       frames: this.anims.generateFrameNames('farmer-left', { start: 0, end: 7 }),
-      frameRate: 6,
+      frameRate: 12,
       repeat: -1
     });
     this.anims.create({
       key: 'farmer_walk_right',
       frames: this.anims.generateFrameNames('farmer-right', { start: 0, end: 7 }),
-      frameRate: 6,
+      frameRate: 12,
       repeat: -1
     });
     this.anims.create({
       key: 'farmer_walk_up',
       frames: this.anims.generateFrameNames('farmer-up', { start: 0, end: 7 }),
-      frameRate: 6,
+      frameRate: 12,
       repeat: -1
     });
     this.anims.create({
       key: 'farmer_walk_down',
       frames: this.anims.generateFrameNames('farmer-down', { start: 0, end: 7 }),
-      frameRate: 6,
+      frameRate: 12,
       repeat: -1
     });
     
@@ -181,7 +181,7 @@ export class MainScene extends Phaser.Scene {
     //update world if needed
     let pos = { x: this.player!.x, y: this.player!.y }    
     let tileCoordinates = WorldRenderer.worldToTileCoordinates(pos);
-    let addedTiles = this.world.addMissingTilesInRadius(tileCoordinates, 6);
+    let addedTiles = this.world.addMissingTilesInRadius(tileCoordinates, 6  );
     WorldRenderer.renderTiles(this, addedTiles);
 
     //update sheep
