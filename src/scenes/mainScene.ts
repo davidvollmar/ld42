@@ -4,7 +4,7 @@ import { Sheep } from '../sheep'
 export class MainScene extends Phaser.Scene {
 
   private world: World;
-  private sheep: Array<Sheep> = [];
+  private sheep: Array<Sheep> = new Array();
 
   constructor() {
     super({
@@ -12,7 +12,7 @@ export class MainScene extends Phaser.Scene {
     });
     this.world = new World();
 
-    Array.from(Array(10).keys()).forEach(i => this.sheep[i] = new Sheep({ x: i * 64, y: i * 64 }, Math.random() * 360));
+    Array.from(Array(10).keys()).forEach(i => this.sheep[i] = new Sheep({ x: i * 64, y: i * 64 }, Math.random() * 360), null);
 
   }
 
@@ -39,7 +39,8 @@ export class MainScene extends Phaser.Scene {
   }
 
   update(): void {
-
+    this.sheep.forEach(baah => baah.moveRandom())
+    new SheepRenderUpdater().render(this, this.sheep)
   }
 }
 
@@ -65,21 +66,32 @@ class WorldRenderer implements Renderer<World> {
 
 class SheepRenderer implements Renderer<Array<Sheep>> {
   render(scene: Phaser.Scene, sheep: Array<Sheep>) {
-    sheep.forEach(beeh => {
+    sheep.forEach(beeh => {      
       let sprite = scene.add.sprite(beeh.getPosition().x, beeh.getPosition().y, 'sheep')
       sprite.setOrigin(0, 0)
-      sprite.setAngle(beeh.getAngle())
+      sprite.setAngle(beeh.getAngle() + Math.PI / 2.0 )
 
       let walk = scene.anims.create({
         key: 'beehmation',
         frames: scene.anims.generateFrameNames('sheep', { start: 0, end: 3 }),
         frameRate: 6,
         repeat: Phaser.FOREVER
-      }
-      );
-  
+      });
+
       sprite.anims.play('beehmation')
-  
+
+      beeh.setSprite(sprite)
+    })
+  }
+}
+
+class SheepRenderUpdater implements Renderer<Array<Sheep>> {
+  render(scene: Phaser.Scene, sheep: Array<Sheep>) {
+    sheep.forEach(baah => {
+      let sprite = baah.getSprite()
+      let position = baah.getPosition()
+      sprite.setPosition(position.x, position.y)
+      sprite.setAngle(baah.getAngle())
     })
   }
 }
