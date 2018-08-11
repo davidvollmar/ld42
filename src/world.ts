@@ -21,7 +21,15 @@ export class World {
         for (let i = 0; i < this.initX; i++) {
             this.tiles[i] = new Array<Tile>()
             for (let j = 0; j < this.initY; j++) {
-                this.tiles[i][j] = new Tile(this.getRandomTileType());
+                if(i == 0 && j == 0) {
+                    this.tiles[i][j] = new Tile(TileType.WATERCOR)
+                } else if(i == 0 ) {
+                    this.tiles[i][j] = new Tile(TileType.WATER1)
+                } else if (j == 0) {
+                    this.tiles[i][j] = new Tile(TileType.WATER1)
+                } else {
+                    this.tiles[i][j] = new Tile(this.getRandomTileType());
+                }
             }
         }
     }
