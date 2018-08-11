@@ -2,13 +2,13 @@ import { Coordinate } from "./world";
 
 export class Sheep {
     private position: Coordinate
-    private angle: number
+    private rotation: number
     private sprite: Phaser.GameObjects.Sprite | null
 
     constructor(position: Coordinate, angle: number) {
         console.log("baah")
         this.position = position
-        this.angle = angle
+        this.rotation = angle
         this.sprite = null
     }
 
@@ -20,23 +20,30 @@ export class Sheep {
         return this.sprite!
     }
 
-    moveRandom() {
-        let scalar = 1
+    moveRandom() {     
+        if(Math.random() < 0.1) {            
+            let scalar = 1
 
-        let x = scalar * Math.random() * Math.cos(this.angle * Math.PI / 180.0)
-        let y = scalar * Math.random() * Math.sin(this.angle * Math.PI / 180.0)               
+            let x = scalar * Math.random() * Math.cos(this.rotation)
+            let y = scalar * Math.random() * Math.sin(this.rotation)               
 
-        this.position.x += x
-        this.position.y += y
+            this.position.x += x
+            this.position.y += y
 
-        this.angle += Math.random() * 10 - 5
+            let randomRotation = (Math.random() * 2 * Math.PI) / 100;
+            if (Math.random() < 0.5) {
+                this.rotation += randomRotation;
+            } else {
+                this.rotation -= randomRotation;
+            }
+        }       
     }
 
     getPosition() : Coordinate{
         return this.position
     }
 
-    getAngle() : integer{
-        return this.angle
+    getRotation() : number{
+        return this.rotation
     }
 }
