@@ -14,21 +14,22 @@ export class PathFinding {
 
     makeGrid(world: World): Array<Array<number>> {
         let grid = Array<Array<number>>()
-
-
         let tiles = world.getTiles()
+        console.log(tiles)
 
-        tiles.forEach((t: Tile, c: Coordinate) => {
-            if (grid[c.x] === undefined) {
-                grid.push(new Array<number>())
-            }
-            if (t.hasFence) {
-                grid[c.x].push(1)
-            } else {
-                grid[c.x].push(0)
+        for (let x = 0 ; x < tiles.length; x++) {
+            grid.push(new Array<number>())
+            for (let y = 0; y < tiles[x].length; y++) {
+                let tile = tiles[x][y]
+
+                if (tile.hasFence) {
+                    grid[x].push(1)
+                } else {
+                    grid[x].push(0)
+                }
             }
         }
-        );
+
         return grid
     }
 
