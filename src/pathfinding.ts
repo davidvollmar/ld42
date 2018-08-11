@@ -15,17 +15,16 @@ export class PathFinding {
     makeGrid(world: World): Array<Array<number>> {
         let grid = Array<Array<number>>()
         let tiles = world.getTiles()
-        console.log(tiles)
 
         for (let x = 0 ; x < tiles.length; x++) {
             grid.push(new Array<number>())
             for (let y = 0; y < tiles[x].length; y++) {
                 let tile = tiles[x][y]
 
-                if (tile.hasFence) {
-                    grid[x].push(1)
-                } else {
+                if (tile.isPassable()) {
                     grid[x].push(0)
+                } else {
+                    grid[x].push(1)
                 }
             }
         }

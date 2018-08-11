@@ -99,7 +99,7 @@ export class MainScene extends Phaser.Scene {
 
   create(): void {
     this.pathFinder = new PathFinding(this.world)
-    this.pathFinder.findPath({x:0, y: 0}, {x: 10, y: 10}).then(this.renderDebugPath.bind(this))
+    this.pathFinder.findPath({x:1, y: 1}, {x: 10, y: 10}).then(this.renderDebugPath.bind(this))
     WorldRenderer.render(this, this.world)
     this.createPlayer();    
     this.createSheeps()
