@@ -1,9 +1,7 @@
 import { World } from '../world'
 import { Sheep } from '../sheep'
 import { TileType } from '../tile'
-import { Farmer } from '../farmer'
-import { FarmerRender, FarmerRenderUpdater, WorldRenderer } from '../renderers'
-import { Keyboard } from '../keyboard'
+import { WorldRenderer } from '../renderers'
 import { Physics } from 'phaser';
 
 export class MainScene extends Phaser.Scene {
@@ -77,12 +75,6 @@ export class MainScene extends Phaser.Scene {
 
   create(): void {
     new WorldRenderer().render(this, this.world)
-    //new SheepRenderer().render(this, this.sheeps)
-    //new FarmerRender().render(this, this.farmer)
-
-
-    //this.farmer = new Farmer(this)    
-    //this.events.addListener('moveEvent', this.farmer.handleEvent, this.farmer)
     this.player = this.physics.add.sprite(250, 256, 'farmer-left', 0);//TODO 256?
 
     this.anims.create({
@@ -112,11 +104,7 @@ export class MainScene extends Phaser.Scene {
     
     this.cursors = this.input.keyboard.createCursorKeys();
 
-
-
-
     //physics
-
     let fences = this.physics.add.staticGroup();
     fences.create(0, 0, 'fence');
     fences.create(1000, 0, 'fence');
@@ -149,53 +137,56 @@ export class MainScene extends Phaser.Scene {
   }
 
   update(): void {
+    this.farmerStuff()
+
+    this.sheeps.forEach(sheep => sheep.moveRandom())
+  }
+
+  farmerStuff() {    
+    let cursors = this.cursors!
+    let player = this.player!
+
     const speed = 150;
-    const prevVelocity = this.player!.body.velocity.clone();
+    const prevVelocity = player.body.velocity.clone();
 
     // Stop any previous movement from the last frame
-    this.player!.body.setVelocity(0);
+    player.body.setVelocity(0);
+
 
     // Horizontal movement
-    if (this.cursors!.left!.isDown) {
-      this.player!.body.setVelocityX(-speed);
-    } else if (this.cursors!.right!.isDown) {
-      this.player!.body.setVelocityX(speed);
+    if (cursors.left.isDown) {
+      player.body.setVelocityX(-speed);
+    } else if (cursors.right.isDown) {
+      player.body.setVelocityX(speed);
     }
 
     // Vertical movement
-    if (this.cursors!.up!.isDown) {
-      this.player!.body.setVelocityY(-speed);
-    } else if (this.cursors!.down!.isDown) {
-      this.player!.body.setVelocityY(speed);
+    if (cursors.up.isDown) {
+      player.body.setVelocityY(-speed);
+    } else if (cursors.down.isDown) {
+      player.body.setVelocityY(speed);
     }
 
     // Normalize and scale the velocity so that player can't move faster along a diagonal
-    this.player!.body.velocity.normalize().scale(speed);
+    player.body.velocity.normalize().scale(speed);
 
     // Update the animation last and give left/right animations precedence over up/down animations
-    if (this.cursors!.left!.isDown) {
-      this.player!.anims.play("farmer_walk_left", true);
-      console.log("left " + this.player!.body.position.x + " " + this.player!.body.position.y);
-    } else if (this.cursors!.right!.isDown) {
-      this.player!.anims.play("farmer_walk_right", true);
-      console.log("right " + this.player!.body.position.x + " " + this.player!.body.position.y);
-    } else if (this.cursors!.up!.isDown) {
-      this.player!.anims.play("farmer_walk_up", true);
-      console.log("up " + this.player!.body.position.x + " " + this.player!.body.position.y);
-    } else if (this.cursors!.down!.isDown) {
-      this.player!.anims.play("farmer_walk_down", true);
-      console.log("down " + this.player!.body.position.x + " " + this.player!.body.position.y);
+    if (cursors.left.isDown) {
+      player.anims.play("farmer_walk_left", true);      
+    } else if (cursors.right.isDown) {
+      player.anims.play("farmer_walk_right", true);      
+    } else if (cursors.up.isDown) {
+      player.anims.play("farmer_walk_up", true);      
+    } else if (cursors.down.isDown) {
+      player.anims.play("farmer_walk_down", true);      
     } else {
-      this.player!.anims.stop();
+      player.anims.stop();
 
       // If we were moving, pick and idle frame to use
-      if (prevVelocity.x < 0) this.player!.setTexture('farmer-left', 0);
-      else if (prevVelocity.x > 0) this.player!.setTexture('farmer-right', 0);
-      else if (prevVelocity.y < 0) this.player!.setTexture('farmer-up', 0);
-      else if (prevVelocity.y > 0) this.player!.setTexture('farmer-down', 0);
+      if (prevVelocity.x < 0) player.setTexture('farmer-left', 0);
+      else if (prevVelocity.x > 0) player.setTexture('farmer-right', 0);
+      else if (prevVelocity.y < 0) player.setTexture('farmer-up', 0);
+      else if (prevVelocity.y > 0) player.setTexture('farmer-down', 0);
     }
-
-
-    this.sheeps.forEach(sheep => sheep.moveRandom())
   }
 }
