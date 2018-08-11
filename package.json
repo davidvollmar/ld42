@@ -1,11 +1,10 @@
 {
-  "name": "infinitris",
+  "name": "ld42",
   "repository": "https://github.com",
   "version": "0.0.1",
-  "description": "infinitris",
+  "description": "ld42",
   "keywords": [
-    "Infinite",
-    "Tetris"
+    "sheep"
   ],
   "devDependencies": {
     "expose-loader": "0.7.5",
@@ -16,6 +15,7 @@
     "webpack-dev-server": "3.1.5"
   },
   "dependencies": {
+    "easystarjs": "^0.4.3",
     "phaser": "^3.11.0",
     "tslint": "^5.11.0"
   },
