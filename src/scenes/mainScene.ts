@@ -1,8 +1,8 @@
 import { World } from '../world'
 import { Sheep } from '../sheep'
-import { Tile, TileType } from '../tile'
+import { TileType } from '../tile'
 import { Farmer } from '../farmer'
-import { FarmerRender, FarmerRenderUpdater, WorldRenderer, SheepRenderer, SheepRenderUpdater } from '../renderers'
+import { FarmerRender, FarmerRenderUpdater, WorldRenderer } from '../renderers'
 import { Keyboard } from '../keyboard'
 
 export class MainScene extends Phaser.Scene {
@@ -11,6 +11,8 @@ export class MainScene extends Phaser.Scene {
   private sheeps: Array<Sheep> = new Array();
   private farmer: Farmer | null = null;
   private keyboard: Keyboard | null = null;
+  
+  private sheepCount = 10
 
   constructor() {
     super({
@@ -74,14 +76,6 @@ export class MainScene extends Phaser.Scene {
     this.farmer = new Farmer(this)    
     this.events.addListener('moveEvent', this.farmer.handleEvent, this.farmer)
     
-    Array.from(Array(10).keys()).forEach(i =>
-      this.sheeps[i] = new Sheep(
-        this,
-        { x: i * 64, y: i * 64 },
-        Math.random() * Math.PI * 2
-      ));
-
-
     new WorldRenderer().render(this, this.world)
     //new SheepRenderer().render(this, this.sheeps)
     new FarmerRender().render(this, this.farmer)
@@ -92,11 +86,6 @@ export class MainScene extends Phaser.Scene {
     fences.create(0, 0, 'fence');
     fences.create(1000, 0, 'fence');
 
-   /* this.sheeps.forEach(sheep => {
-      this.physics.add.collider(sheep, fences);
-    })*/
-
-    //nieuwe manier van schapen maken    
     this.anims.create({
         key: 'sheep_animation',
         frames: this.anims.generateFrameNames('sheep', { start: 0, end: 3 }),
@@ -104,24 +93,25 @@ export class MainScene extends Phaser.Scene {
         repeat: Phaser.FOREVER
     });
 
-    var spriteBounds = Phaser.Geom.Rectangle.Inflate(Phaser.Geom.Rectangle.Clone(this.physics.world.bounds), -100, -100);
+    // ??
+    Phaser.Geom.Rectangle.Inflate(Phaser.Geom.Rectangle.Clone(this.physics.world.bounds), -100, -100);
 
-    for(var i = 0; i< 10; i++){ 
-      var pos = new Phaser.Geom.Point(i * 64, i* 64);
-      var sheep = this.physics.add.sprite(pos.x, pos.y, 'sheep');
+    for(let i = 0; i< this.sheepCount; i++){ 
+      let pos = new Phaser.Geom.Point(i * 64, i* 64);      
+      let sprite = this.physics.add.sprite(pos.x, pos.y, 'sheep');
       let rotation = Math.random() * Math.PI * 2;
-      sheep.setRotation(rotation);
+      sprite.setRotation(rotation);
       let velocity = this.physics.velocityFromRotation(rotation);
-      sheep.setVelocity(velocity.x, velocity.y);
-      sheep.play('sheep_animation');
+      sprite.setVelocity(velocity.x, velocity.y);
+      sprite.play('sheep_animation');
+      let sheep = new Sheep(this, rotation, sprite)            
+      this.sheeps.push(sheep)
     }
   }
 
   update(): void {
     this.keyboard!.update()
-
-    //this.sheeps.forEach(sheep => sheep.moveRandom())
-    //new SheepRenderUpdater().render(this.sheeps)
+    this.sheeps.forEach(sheep => sheep.moveRandom())
     new FarmerRenderUpdater().render(this.farmer!)
   }
 }
