@@ -1,4 +1,3 @@
-import { Sheep } from './sheep'
 import { Farmer } from './farmer'
 import { World } from './world'
 

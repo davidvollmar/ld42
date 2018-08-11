@@ -11,8 +11,8 @@ export class MainScene extends Phaser.Scene {
   private sheeps: Array<Sheep> = new Array();
   private farmer: Farmer | null = null;
   private keyboard: Keyboard | null = null;
-  
-  private sheepCount = 10
+
+  private sheepCount = 100
 
   constructor() {
     super({
@@ -73,9 +73,9 @@ export class MainScene extends Phaser.Scene {
   }
 
   create(): void {
-    this.farmer = new Farmer(this)    
+    this.farmer = new Farmer(this)
     this.events.addListener('moveEvent', this.farmer.handleEvent, this.farmer)
-    
+
     new WorldRenderer().render(this, this.world)
     //new SheepRenderer().render(this, this.sheeps)
     new FarmerRender().render(this, this.farmer)
@@ -86,25 +86,29 @@ export class MainScene extends Phaser.Scene {
     fences.create(0, 0, 'fence');
     fences.create(1000, 0, 'fence');
 
+    this.createSheeps()
+  }
+
+  createSheeps() {    
     this.anims.create({
-        key: 'sheep_animation',
-        frames: this.anims.generateFrameNames('sheep', { start: 0, end: 3 }),
-        frameRate: 6,
-        repeat: Phaser.FOREVER
+      key: 'sheep_animation',
+      frames: this.anims.generateFrameNames('sheep', { start: 0, end: 3 }),
+      frameRate: 6,
+      repeat: Phaser.FOREVER
     });
 
     // ??
     Phaser.Geom.Rectangle.Inflate(Phaser.Geom.Rectangle.Clone(this.physics.world.bounds), -100, -100);
 
-    for(let i = 0; i< this.sheepCount; i++){ 
-      let pos = new Phaser.Geom.Point(i * 64, i* 64);      
+    for (let i = 0; i < this.sheepCount; i++) {
+      let pos = new Phaser.Geom.Point(i * 64, i * 64);
       let sprite = this.physics.add.sprite(pos.x, pos.y, 'sheep');
       let rotation = Math.random() * Math.PI * 2;
       sprite.setRotation(rotation);
       let velocity = this.physics.velocityFromRotation(rotation);
       sprite.setVelocity(velocity.x, velocity.y);
       sprite.play('sheep_animation');
-      let sheep = new Sheep(this, rotation, sprite)            
+      let sheep = new Sheep(this, rotation, sprite)
       this.sheeps.push(sheep)
     }
   }
