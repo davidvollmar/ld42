@@ -3,8 +3,10 @@ import { Sheep } from '../sheep'
 import { TileType } from '../tile'
 import { WorldRenderer } from '../renderers'
 import { Physics, Input } from 'phaser';
+import { PathFinding, Path } from '../pathfinding';
 
 export class MainScene extends Phaser.Scene {
+  private debug = true
 
   private world: World;
   private sheeps: Array<Sheep> = new Array();
@@ -17,6 +19,7 @@ export class MainScene extends Phaser.Scene {
 
   private worldUpdateRequired = false
   private sheepCount = 100
+  private pathFinder: PathFinding | null = null
 
   constructor() {
     super({
@@ -80,8 +83,29 @@ export class MainScene extends Phaser.Scene {
 
   create(): void {
     new WorldRenderer().render(this, this.world)
+    this.pathFinder = new PathFinding(this.world)
+    this.pathFinder.findPath({x:0, y: 0}, {x: 10, y: 10}).then(this.renderDebugPath.bind(this))
     this.createPlayer();    
     this.createSheeps()
+  }
+
+  renderDebugPath(path: Path) {
+    if(this.debug) {
+      let graphics = this.add.graphics({ lineStyle: { color: 0xFF00FF , width: 5} });
+      let size = WorldRenderer.tileSize
+      graphics.setDepth(100)
+      for(let i = 0 ; i < path.length - 1; i++) {
+        let p1 = path[i]
+        let p2 = path[i+1]
+        let line = new Phaser.Geom.Line(
+          size*p1.x+size/2,
+          size*p1.y+size/2, 
+          size*p2.x+size/2, 
+          size*p2.y+size/2
+        )
+        graphics.strokeLineShape(line)
+      }
+    }
   }
 
   createPlayer() {

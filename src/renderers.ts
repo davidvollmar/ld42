@@ -2,7 +2,7 @@ import { World, Coordinate } from './world'
 import { TileType } from './tile';
 
 export class WorldRenderer {
-    private tileSize = 128
+    public static tileSize = 128
 
     render(scene: Phaser.Scene, world: World) {
         let arrays = world.getTiles()
@@ -10,8 +10,8 @@ export class WorldRenderer {
             let tiles = arrays[x]
             for (var y = 0; y < tiles.length; y++) {
                 let tile = tiles[y]
-                let posX = x * this.tileSize
-                let posY = y * this.tileSize
+                let posX = x * WorldRenderer.tileSize
+                let posY = y * WorldRenderer.tileSize
                 let sprite = scene.add.sprite(posX, posY, tile.tileType);
                 tile.tileSprite = sprite
                 sprite.setOrigin(0, 0);
@@ -25,8 +25,8 @@ export class WorldRenderer {
             let tiles = arrays[x]
             for (var y = 0; y < tiles.length; y++) {
                 let tile = tiles[y]
-                let posX = x * this.tileSize
-                let posY = y * this.tileSize
+                let posX = x * WorldRenderer.tileSize
+                let posY = y * WorldRenderer.tileSize
                 if (tile.hasFence && tile.fenceSprite == null) {
                     let fence = scene.add.sprite(posX, posY, TileType.FENCE)
                     fence.setOrigin(0, 0);
@@ -38,8 +38,8 @@ export class WorldRenderer {
     }
 
     worldToTileCoordinates(c: Coordinate): Coordinate {
-        let x = Math.floor(c.x / this.tileSize)
-        let y = Math.floor(c.y / this.tileSize)
+        let x = Math.floor(c.x / WorldRenderer.tileSize)
+        let y = Math.floor(c.y / WorldRenderer.tileSize)
         return { x, y }
     }
 }
