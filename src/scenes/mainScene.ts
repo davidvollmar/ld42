@@ -181,8 +181,8 @@ export class MainScene extends Phaser.Scene {
     //update world if needed
     let pos = { x: this.player!.x, y: this.player!.y }    
     let tileCoordinates = WorldRenderer.worldToTileCoordinates(pos);
-    let addedTiles = this.world.addMissingTilesInRadius(tileCoordinates, 6  );
-    WorldRenderer.renderTiles(this, addedTiles);
+    this.world.addMissingTilesInRadius(tileCoordinates, 6);
+    WorldRenderer.render(this, this.world); //TODO?
 
     //update sheep
     this.sheeps.forEach(sheep => sheep.moveRandom())

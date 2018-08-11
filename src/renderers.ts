@@ -8,33 +8,41 @@ export class WorldRenderer {
         this.renderTiles(scene, world.getTiles());
     }
 
-    static renderTiles(scene: Phaser.Scene, tiles: Map<Coordinate, Tile>) {
-        tiles.forEach((tile: Tile, coord: Coordinate) => {
-            let posX = coord.x * this.tileSize
-            let posY = coord.y * this.tileSize
-            let sprite = scene.add.sprite(posX, posY, tile.tileType);
-            sprite.setDepth(-100);
-            sprite.setOrigin(0, 0);
-            tile.tileSprite = sprite
-            if (tile.hasFence && tile.fenceSprite == null) {
-                tile.fenceSprite = scene.add.sprite(posX, posY, TileType.FENCE)
+    static renderTiles(scene: Phaser.Scene, arrays: Tile[][]) {
+        for (var x = 0; x < arrays.length; x++) {
+            let tiles = arrays[x]
+            for (var y = 0; y < tiles.length; y++) {
+                let tile = tiles[y]
+                let posX = x * this.tileSize
+                let posY = y * this.tileSize
+                let sprite = scene.add.sprite(posX, posY, tile.tileType);
+                sprite.setOrigin(0, 0);
+                sprite.setDepth(-100);
+                tile.tileSprite = sprite
+                if (tile.hasFence && tile.fenceSprite == null) {
+                    tile.fenceSprite = scene.add.sprite(posX, posY, TileType.FENCE)
+                }
             }
-        })
+        }
     }
 
     static placeFence(scene: Phaser.Scene, world: World) {
-        let tiles = world.getTiles()
+        let arrays = world.getTiles()
 
-        tiles.forEach((tile: Tile, coord: Coordinate) => {
-            let posX = coord.x * this.tileSize
-            let posY = coord.y * this.tileSize
-            if (tile.hasFence && tile.fenceSprite == null) {
-                let fence = scene.add.sprite(posX, posY, TileType.FENCE)
-                fence.setOrigin(0, 0);
-                fence.setSize(128, 128);
-                tile.fenceSprite = fence
+        for (var x = 0; x < arrays.length; x++) {
+            let tiles = arrays[x]
+            for (var y = 0; y < tiles.length; y++) {
+                let tile = tiles[y]
+                let posX = x * this.tileSize
+                let posY = y * this.tileSize
+                if (tile.hasFence && tile.fenceSprite == null) {
+                    let fence = scene.add.sprite(posX, posY, TileType.FENCE)
+                    fence.setOrigin(0, 0);
+                    fence.setSize(128, 128);
+                    tile.fenceSprite = fence
+                }
             }
-        });
+        }
     }
 
     static worldToTileCoordinates(c: Coordinate): Coordinate {
