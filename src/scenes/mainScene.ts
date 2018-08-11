@@ -2,12 +2,14 @@ import { World, TileType } from '../world'
 import { Sheep } from '../sheep'
 import { Farmer } from '../farmer'
 import { FarmerRender, FarmerRenderUpdater, WorldRenderer, SheepRenderer, SheepRenderUpdater } from '../renderers'
+import { Keyboard } from '../keyboard'
 
 export class MainScene extends Phaser.Scene {
 
   private world: World;
   private sheeps: Array<Sheep> = new Array();
-  private farmer = new Farmer();
+  private farmer: Farmer | null = null;
+  private keyboard: Keyboard | null = null;
 
   constructor() {
     super({
@@ -16,13 +18,13 @@ export class MainScene extends Phaser.Scene {
     this.world = new World();
 
     Array.from(Array(10).keys()).forEach(i => this.sheeps[i] = new Sheep({ x: i * 64, y: i * 64 }, Math.random() * Math.PI * 2), null);
-
   }
 
   preload(): void {
     this.loadSpriteTiles()
     this.loadSpriteSheep()
     this.loadFarmer()
+    this.keyboard = new Keyboard(this)
   }
 
   loadSpriteTiles() {
@@ -63,14 +65,16 @@ export class MainScene extends Phaser.Scene {
   }
 
   create(): void {
+    this.farmer = new Farmer(this)
     new WorldRenderer().render(this, this.world)
     new SheepRenderer().render(this, this.sheeps)
     new FarmerRender().render(this, this.farmer)
   }
 
   update(): void {
+    this.keyboard!.update()
     this.sheeps.forEach(sheep => sheep.moveRandom())
     new SheepRenderUpdater().render(this.sheeps)
-    new FarmerRenderUpdater().render(this.farmer)
+    new FarmerRenderUpdater().render(this.farmer!)
   }
 }

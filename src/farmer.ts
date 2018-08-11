@@ -1,11 +1,12 @@
 import { Coordinate } from "./world";
 
-export class Farmer {
+export class Farmer extends Phaser.GameObjects.GameObject {
     private position: Coordinate = {x: 200, y: 300}
     private rotation = 0
     private sprite : Phaser.GameObjects.Sprite | null
 
-    constructor() {
+    constructor(scene: Phaser.Scene) {
+        super(scene, "farmerbob")
         console.log("hoi ik ben boer bob")
         this.sprite = null
     }
