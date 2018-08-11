@@ -2,13 +2,17 @@ import { World } from '../world'
 import { Sheep } from '../sheep'
 import { TileType } from '../tile'
 import { WorldRenderer } from '../renderers'
-import { Physics } from 'phaser';
+import { Physics, Input } from 'phaser';
 
 export class MainScene extends Phaser.Scene {
 
   private world: World;
   private sheeps: Array<Sheep> = new Array();
   private cursors: CursorKeys | null = null;
+  private key_w: Input.Keyboard.Key | null = null;
+  private key_a: Input.Keyboard.Key | null = null;
+  private key_s: Input.Keyboard.Key | null = null;
+  private key_d: Input.Keyboard.Key | null = null;
   private player: Physics.Arcade.Sprite | null = null;
 
   private worldUpdateRequired = false
@@ -76,14 +80,7 @@ export class MainScene extends Phaser.Scene {
 
   create(): void {
     new WorldRenderer().render(this, this.world)
-
     this.createPlayer();    
-
-    //fences
-    let fences = this.physics.add.staticGroup();
-    fences.create(0, 0, 'fence');
-    fences.create(1000, 0, 'fence');
-
     this.createSheeps()
   }
 
@@ -120,6 +117,10 @@ export class MainScene extends Phaser.Scene {
     
 
     this.cursors = this.input.keyboard.createCursorKeys();
+    this.key_w = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.W);
+    this.key_a = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.A);
+    this.key_s = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.S);
+    this.key_d = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.D);
   }
 
   createSheeps() {    
@@ -151,14 +152,18 @@ export class MainScene extends Phaser.Scene {
       new WorldRenderer().fence(this, this.world)
     }
 
-    this.farmerStuff()
+    this.updateFarmer()
 
     this.sheeps.forEach(sheep => sheep.moveRandom())
   }
 
-  farmerStuff() {    
+  updateFarmer() {    
     const cursors = this.cursors!
     const player = this.player!
+    const key_w = this.key_w!
+    const key_a = this.key_a!
+    const key_s = this.key_s!
+    const key_d = this.key_d!
 
     const speed = 150;
     const prevVelocity = player.body.velocity.clone();
@@ -167,39 +172,39 @@ export class MainScene extends Phaser.Scene {
     player.body.setVelocity(0);
 
     // Horizontal movement
-    if (cursors.left.isDown) {
+    if (cursors.left.isDown || key_a.isDown) {
       player.body.setVelocityX(-speed);
-    } else if (cursors.right.isDown) {
+    } else if (cursors.right.isDown || key_d.isDown) {
       player.body.setVelocityX(speed);
     }
 
     // Vertical movement
-    if (cursors.up.isDown) {
+    if (cursors.up.isDown || key_w.isDown) {
       player.body.setVelocityY(-speed);
-    } else if (cursors.down.isDown) {
+    } else if (cursors.down.isDown || key_s.isDown) {
       player.body.setVelocityY(speed);
     }
 
+    // Fence placement
     if(cursors.space.isDown) {
       let pos = { x: player.x, y: player.y }
       let tileCoordinates = new WorldRenderer().worldToTileCoordinates(pos);
       let tile = this.world.getTile(tileCoordinates)
       tile.hasFence = true
       this.worldUpdateRequired = true
-
     }
 
     // Normalize and scale the velocity so that player can't move faster along a diagonal
     player.body.velocity.normalize().scale(speed);
 
     // Update the animation last and give left/right animations precedence over up/down animations
-    if (cursors.left.isDown) {
+    if (cursors.left.isDown || key_a.isDown) {
       player.anims.play("farmer_walk_left", true);      
-    } else if (cursors.right.isDown) {
+    } else if (cursors.right.isDown || key_d.isDown) {
       player.anims.play("farmer_walk_right", true);      
-    } else if (cursors.up.isDown) {
+    } else if (cursors.up.isDown || key_w.isDown) {
       player.anims.play("farmer_walk_up", true);      
-    } else if (cursors.down.isDown) {
+    } else if (cursors.down.isDown || key_s.isDown) {
       player.anims.play("farmer_walk_down", true);      
     } else {
       player.anims.stop();
