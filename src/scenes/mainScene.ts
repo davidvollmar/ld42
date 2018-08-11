@@ -1,5 +1,6 @@
-import { World, TileType } from '../world'
+import { World } from '../world'
 import { Sheep } from '../sheep'
+import { Tile, TileType} from '../tile'
 
 export class MainScene extends Phaser.Scene {
 
