@@ -11,6 +11,29 @@ export class Farmer extends Phaser.GameObjects.GameObject {
         this.sprite = null
     }
 
+    handleEvent(args: any) {
+        console.log(`Farmer is ${this.type}`)
+        switch (args) {
+            case "up": 
+                this.position.y -= 5
+                break
+            case "down":
+                this.position.y += 5
+                break
+            case "left":
+                this.position.x -= 5
+                break
+            case "right":
+                this.position.x += 5
+                break
+            case "action":
+                console.log("doing an action")
+                break
+            default:
+                console.log(`unhandled event ${args}`)        
+        }        
+    }
+
     getPosition() {
         return this.position
     }

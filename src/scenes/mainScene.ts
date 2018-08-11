@@ -71,13 +71,15 @@ export class MainScene extends Phaser.Scene {
   }
 
   create(): void {
-    this.farmer = new Farmer(this)
-    /*Array.from(Array(10).keys()).forEach(i =>
+    this.farmer = new Farmer(this)    
+    this.events.addListener('moveEvent', this.farmer.handleEvent, this.farmer)
+    
+    Array.from(Array(10).keys()).forEach(i =>
       this.sheeps[i] = new Sheep(
         this,
         { x: i * 64, y: i * 64 },
         Math.random() * Math.PI * 2
-      ));*/
+      ));
 
 
     new WorldRenderer().render(this, this.world)
