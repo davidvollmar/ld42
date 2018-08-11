@@ -1,49 +1,30 @@
 import { Coordinate } from "./world";
 
-export class Sheep extends Phaser.GameObjects.GameObject {
-    private position: Coordinate
+export class Sheep extends Phaser.GameObjects.GameObject {    
     private rotation: number
-    private sprite: Phaser.GameObjects.Sprite | null
+    private sprite: Phaser.Physics.Arcade.Sprite
 
-    constructor(scene: Phaser.Scene, position: Coordinate, rotation: number) {        
-        super(scene, "beeh")
-        this.position = position
+    constructor(scene: Phaser.Scene, rotation: number, sprite: Phaser.Physics.Arcade.Sprite) {
+        super(scene, "beeh")        
         this.rotation = rotation
-        this.sprite = null
-    }
-
-    setSprite(sprite: Phaser.GameObjects.Sprite) {
         this.sprite = sprite
     }
 
-    getSprite() : Phaser.GameObjects.Sprite {
-        return this.sprite!
+    getSprite(): Phaser.Physics.Arcade.Sprite {
+        return this.sprite
     }
 
-   /* moveRandom() {     
-        if(Math.random() < 0.1) {            
-            let scalar = 1
+    moveRandom() {
+        let randomRotation = (Math.random() * 2 * Math.PI) / 100;
+        if (Math.random() < 0.5) {
+            this.rotation += randomRotation;
+        } else {
+            this.rotation -= randomRotation;
+        }
 
-            let x = scalar * Math.random() * Math.cos(this.rotation)
-            let y = scalar * Math.random() * Math.sin(this.rotation)               
+        let velocity = this.scene.physics.velocityFromRotation(this.rotation);
+        this.sprite.setRotation(this.rotation)
+        this.sprite.setVelocity(velocity.x, velocity.y);
 
-            this.position.x += x
-            this.position.y += y
-
-            let randomRotation = (Math.random() * 2 * Math.PI) / 100;
-            if (Math.random() < 0.5) {
-                this.rotation += randomRotation;
-            } else {
-                this.rotation -= randomRotation;
-            }
-        } 
-    }*/
-
-    getPosition() : Coordinate{
-        return this.position
-    }
-
-    getRotation() : number{
-        return this.rotation
     }
 }
