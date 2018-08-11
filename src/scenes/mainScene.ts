@@ -75,6 +75,18 @@ export class MainScene extends Phaser.Scene {
 
   create(): void {
     new WorldRenderer().render(this, this.world)
+
+    this.createPlayer();    
+
+    //fences
+    let fences = this.physics.add.staticGroup();
+    fences.create(0, 0, 'fence');
+    fences.create(1000, 0, 'fence');
+
+    this.createSheeps()
+  }
+
+  createPlayer() {
     this.player = this.physics.add.sprite(250, 256, 'farmer-left', 0);//TODO 256?
 
     this.anims.create({
@@ -102,14 +114,11 @@ export class MainScene extends Phaser.Scene {
       repeat: -1
     });
     
+    const camera = this.cameras.main;
+    camera.startFollow(this.player);
+    
+
     this.cursors = this.input.keyboard.createCursorKeys();
-
-    //physics
-    let fences = this.physics.add.staticGroup();
-    fences.create(0, 0, 'fence');
-    fences.create(1000, 0, 'fence');
-
-    this.createSheeps()
   }
 
   createSheeps() {    
