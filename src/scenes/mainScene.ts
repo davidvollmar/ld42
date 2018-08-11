@@ -4,12 +4,14 @@ import { TileType } from '../tile'
 import { WorldRenderer } from '../renderers'
 import { Physics, Input } from 'phaser';
 import { PathFinding, Path } from '../pathfinding';
+import { Wolf } from '../wolf'
 
 export class MainScene extends Phaser.Scene {
   private debug = true
 
   private world: World;
   private sheeps: Array<Sheep> = new Array();
+  private wolfs: Array<Wolf> = new Array();
   private cursors: CursorKeys | null = null;
   private key_w: Input.Keyboard.Key | null = null;
   private key_a: Input.Keyboard.Key | null = null;
@@ -19,6 +21,7 @@ export class MainScene extends Phaser.Scene {
 
   private worldUpdateRequired = false
   private sheepCount = 100
+  private wolfCount = 10
   private pathFinder: PathFinding | null = null
 
   constructor() {
@@ -39,6 +42,7 @@ export class MainScene extends Phaser.Scene {
     this.loadSpriteTiles()
     this.loadSpriteSheep()
     this.loadFarmer()
+    this.loadWolf()
   }
 
   loadSpriteTiles() {
@@ -81,12 +85,25 @@ export class MainScene extends Phaser.Scene {
     this.load.spritesheet('farmer-down', 'assets/Graphics/farmer-down.png', spritesheetconfig);
   }
 
+  loadWolf() {
+    let spritesheetconfig = {
+      frameWidth: 64,
+      frameHeight: 64,
+      startFrame: 0,
+      endFrame: 9,
+      margin: 0,
+      spacing: 0
+    };
+    this.load.spritesheet('wolf', 'assets/Graphics/Wolf.png', spritesheetconfig);
+  }
+
   create(): void {
     this.pathFinder = new PathFinding(this.world)
     this.pathFinder.findPath({x:0, y: 0}, {x: 10, y: 10}).then(this.renderDebugPath.bind(this))
     WorldRenderer.render(this, this.world)
     this.createPlayer();    
     this.createSheeps()
+    this.createWolf()
   }
 
   renderDebugPath(path: Path) {
@@ -168,6 +185,30 @@ export class MainScene extends Phaser.Scene {
       sprite.play('sheep_animation');
       let sheep = new Sheep(this, rotation, sprite)
       this.sheeps.push(sheep)
+    }
+  }
+
+  createWolf() {
+    this.anims.create({
+      key: 'wolf_animation',
+      frames: this.anims.generateFrameNames('wolf', { start: 0, end: 3 }),
+      frameRate: 9,
+      repeat: Phaser.FOREVER
+    });
+
+    // ??
+    Phaser.Geom.Rectangle.Inflate(Phaser.Geom.Rectangle.Clone(this.physics.world.bounds), -100, -100);
+
+    for (let i = 0; i < this.wolfCount; i++) {
+      let pos = new Phaser.Geom.Point(i * 64, i * 64);
+      let sprite = this.physics.add.sprite(pos.x, pos.y, 'wolf');
+      let rotation = Math.random() * Math.PI * 2;
+      sprite.setRotation(rotation);
+      let velocity = this.physics.velocityFromRotation(rotation);
+      sprite.setVelocity(velocity.x, velocity.y);
+      sprite.play('wolf_animation');
+      let wolf = new Wolf(this)
+      this.wolfs.push(wolf)
     }
   }
 
