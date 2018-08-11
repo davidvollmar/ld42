@@ -1,3 +1,4 @@
+import { Tile, TileType } from "./tile";
 import { WorldLoader } from './worldLoader'
 
 export class World {
@@ -16,7 +17,7 @@ export class World {
             this.tiles[i] = new Array<Tile>()
             for (let j = 0; j < this.maxY; j++) {
                 let type = this.getRandomTileType();
-                this.tiles[i][j] = { tileType: type }
+                this.tiles[i][j] = { tileType: type, hasFence: false }
             }
         }
     }
@@ -40,25 +41,4 @@ export class World {
 export interface Coordinate {
     x: integer,
     y: integer
-}
-
-export class Tile {
-    public tileType: TileType
-
-    constructor(tileType: TileType) {
-        this.tileType = tileType
-    }
-}
-
-export const enum TileType {
-    GRASS = "grass",
-    GRASSSHORT = "grass_short",
-    GRASSGONE = "grass_gone",
-    WATER0 = "water_0",
-    WATER1 = "water_1",
-    WATERPAR = "water_parallel",
-    WATERCOR = "water_corner",
-    WATER3 = "water_3",
-    WATER4 = "water_4",
-    FENCE = "fence"
 }

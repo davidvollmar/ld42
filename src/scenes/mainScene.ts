@@ -1,5 +1,6 @@
-import { World, TileType } from '../world'
+import { World } from '../world'
 import { Sheep } from '../sheep'
+import { Tile, TileType} from '../tile'
 import { Farmer } from '../farmer'
 import { FarmerRender, FarmerRenderUpdater, WorldRenderer, SheepRenderer, SheepRenderUpdater } from '../renderers'
 import { Keyboard } from '../keyboard'
