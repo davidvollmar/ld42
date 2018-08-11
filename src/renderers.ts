@@ -22,11 +22,7 @@ export class WorldRenderer implements InitialRenderer<World> {
                 let sprite = scene.add.sprite(x * this.tileSize, y * this.tileSize, tile.tileType);
                 sprite.setOrigin(0, 0);
             }
-        }
-
-        let fences = scene.physics.add.staticGroup();
-        fences.create(0, 0, 'fence');
-        fences.create(1000, 0, 'fence');
+        }        
     }
 }
 
@@ -47,9 +43,6 @@ export class SheepRenderer implements InitialRenderer<Array<Sheep>> {
             sprite.anims.play('beehmation')
 
             sheep.setSprite(sprite)
-
-            //physics
-            scene.physics.add.collider(sheep, fences);
         })
     }
 }

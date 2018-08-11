@@ -12,11 +12,11 @@ export class Farmer extends Phaser.GameObjects.GameObject {
     }
 
     getPosition() {
-        return {x: 200, y: 300}
+        return this.position
     }
 
     getRotation() {
-        return 0
+        return this.rotation
     }
 
     setSprite(sprite: Phaser.GameObjects.Sprite) {

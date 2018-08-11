@@ -9,7 +9,14 @@ const config: GameConfig = {
   height: 1024,
   type: Phaser.AUTO,
   parent: "game",
-  scene: [MainScene]
+  scene: [MainScene],
+  physics: {
+    default: 'arcade',
+    arcade: {
+      gravity: { y: 300 },
+      debug: false
+    }
+  }
 };
 
 // game class

@@ -1,6 +1,6 @@
 import { World } from '../world'
 import { Sheep } from '../sheep'
-import { Tile, TileType} from '../tile'
+import { Tile, TileType } from '../tile'
 import { Farmer } from '../farmer'
 import { FarmerRender, FarmerRenderUpdater, WorldRenderer, SheepRenderer, SheepRenderUpdater } from '../renderers'
 import { Keyboard } from '../keyboard'
@@ -14,11 +14,16 @@ export class MainScene extends Phaser.Scene {
 
   constructor() {
     super({
-      key: "MainScene"
+      key: "MainScene",
+      physics: {
+        default: 'arcade',
+        arcade: {
+          gravity: { y: 300 },
+          debug: false
+        }
+      }
     });
     this.world = new World();
-
-    Array.from(Array(10).keys()).forEach(i => this.sheeps[i] = new Sheep({ x: i * 64, y: i * 64 }, Math.random() * Math.PI * 2), null);
   }
 
   preload(): void {
@@ -67,9 +72,28 @@ export class MainScene extends Phaser.Scene {
 
   create(): void {
     this.farmer = new Farmer(this)
+    Array.from(Array(10).keys()).forEach(i =>
+      this.sheeps[i] = new Sheep(
+        this,
+        { x: i * 64, y: i * 64 },
+        Math.random() * Math.PI * 2
+      ));
+
+
     new WorldRenderer().render(this, this.world)
     new SheepRenderer().render(this, this.sheeps)
     new FarmerRender().render(this, this.farmer)
+
+    //physics
+
+    let fences = this.physics.add.staticGroup();
+    fences.create(0, 0, 'fence');
+    fences.create(1000, 0, 'fence');
+
+    this.sheeps.forEach(sheep => {
+      this.physics.add.collider(sheep, fences);
+    })
+
   }
 
   update(): void {
