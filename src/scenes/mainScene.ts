@@ -79,13 +79,13 @@ export class MainScene extends Phaser.Scene {
   }
 
   create(): void {
-    new WorldRenderer().render(this, this.world)
+    WorldRenderer.render(this, this.world)
     this.createPlayer();    
     this.createSheeps()
   }
 
   createPlayer() {
-    this.player = this.physics.add.sprite(250, 256, 'farmer-left', 0);//TODO 256?
+    this.player = this.physics.add.sprite(512, 512, 'farmer-left', 0);
 
     this.anims.create({
       key: 'farmer_walk_left',
@@ -149,11 +149,18 @@ export class MainScene extends Phaser.Scene {
 
   update(): void {    
     if(this.worldUpdateRequired) {
-      new WorldRenderer().fence(this, this.world)
+      WorldRenderer.placeFence(this, this.world)
     }
 
     this.updateFarmer()
 
+    //update world if needed
+    let pos = { x: this.player!.x, y: this.player!.y }    
+    let tileCoordinates = WorldRenderer.worldToTileCoordinates(pos);
+    let addedTiles = this.world.addMissingTilesInRadius(tileCoordinates, 3);
+    WorldRenderer.renderTiles(this, addedTiles);
+
+    //update sheep
     this.sheeps.forEach(sheep => sheep.moveRandom())
   }
 
@@ -188,9 +195,9 @@ export class MainScene extends Phaser.Scene {
     // Fence placement
     if(cursors.space.isDown) {
       let pos = { x: player.x, y: player.y }
-      let tileCoordinates = new WorldRenderer().worldToTileCoordinates(pos);
+      let tileCoordinates = WorldRenderer.worldToTileCoordinates(pos);
       let tile = this.world.getTile(tileCoordinates)
-      tile.hasFence = true
+      tile!.hasFence = true
       this.worldUpdateRequired = true
     }
 

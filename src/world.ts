@@ -1,31 +1,55 @@
 import { Tile, TileType } from "./tile";
 
+
 export class World {
+    
+    private tiles = new Map<Coordinate, Tile>();
 
-    private tiles: Tile[][]
-
-    private maxX = 20
-    private maxY = 20
+    private initX = 20
+    private initY = 20
 
     constructor() {
         console.log("Init world")        
 
-        this.tiles = new Array<Array<Tile>>()
-        for (let i = 0; i < this.maxX; i++) {
-            this.tiles[i] = new Array<Tile>()
-            for (let j = 0; j < this.maxY; j++) {
+        for (let i = 0; i < this.initX; i++) {            
+            for (let j = 0; j < this.initY; j++) {
                 let type = this.getRandomTileType();
-                this.tiles[i][j] = new Tile(type)
+                this.tiles.set({x: i, y: j}, new Tile(type));
             }
         }
     }
 
-    getTile(c: Coordinate): Tile {
-        return this.tiles[c.x][c.y]
+    //sorry
+    getTile(c: Coordinate): Tile | null { 
+        let toReturn = null;
+        this.tiles.forEach((tile: Tile, coord: Coordinate) => {                        
+            if(coord.x == c.x && coord.y == c.y) {
+                toReturn = tile;
+            }
+        });
+        return toReturn;
     }
 
-    getTiles(): Array<Array<Tile>> {
+    getTiles(): Map<Coordinate, Tile> {
         return this.tiles
+    }
+
+    addMissingTilesInRadius(coord: Coordinate, radius: integer): Map<Coordinate, Tile> {        
+        let toReturn = new Map<Coordinate, Tile>();
+
+        for(var x = coord.x - radius; x < coord.x + radius; x++) {
+            for(var y = coord.y - radius; y < coord.y + radius; y++) {                
+                let checkCoord = {x: x, y: y};
+                if (this.getTile(checkCoord) == null) {
+                    console.log("need to add tile at x: " + x + ", y: " + y);
+                    let type = this.getRandomTileType();
+                    this.tiles.set(checkCoord, new Tile(type));                    
+                    toReturn.set(checkCoord, new Tile(type));
+                }
+            }
+        }
+
+        return toReturn;
     }
 
     private getRandomTileType(): TileType {
