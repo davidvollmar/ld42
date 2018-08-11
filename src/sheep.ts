@@ -20,7 +20,7 @@ export class Sheep extends Phaser.GameObjects.GameObject {
         return this.sprite!
     }
 
-    moveRandom() {     
+   /* moveRandom() {     
         if(Math.random() < 0.1) {            
             let scalar = 1
 
@@ -36,8 +36,8 @@ export class Sheep extends Phaser.GameObjects.GameObject {
             } else {
                 this.rotation -= randomRotation;
             }
-        }       
-    }
+        } 
+    }*/
 
     getPosition() : Coordinate{
         return this.position

@@ -18,7 +18,7 @@ export class MainScene extends Phaser.Scene {
       physics: {
         default: 'arcade',
         arcade: {
-          gravity: { y: 300 },
+          gravity: { y: 0 },
           debug: false
         }
       }
@@ -72,16 +72,16 @@ export class MainScene extends Phaser.Scene {
 
   create(): void {
     this.farmer = new Farmer(this)
-    Array.from(Array(10).keys()).forEach(i =>
+    /*Array.from(Array(10).keys()).forEach(i =>
       this.sheeps[i] = new Sheep(
         this,
         { x: i * 64, y: i * 64 },
         Math.random() * Math.PI * 2
-      ));
+      ));*/
 
 
     new WorldRenderer().render(this, this.world)
-    new SheepRenderer().render(this, this.sheeps)
+    //new SheepRenderer().render(this, this.sheeps)
     new FarmerRender().render(this, this.farmer)
 
     //physics
@@ -90,16 +90,36 @@ export class MainScene extends Phaser.Scene {
     fences.create(0, 0, 'fence');
     fences.create(1000, 0, 'fence');
 
-    this.sheeps.forEach(sheep => {
+   /* this.sheeps.forEach(sheep => {
       this.physics.add.collider(sheep, fences);
-    })
+    })*/
 
+    //nieuwe manier van schapen maken    
+    this.anims.create({
+        key: 'sheep_animation',
+        frames: this.anims.generateFrameNames('sheep', { start: 0, end: 3 }),
+        frameRate: 6,
+        repeat: Phaser.FOREVER
+    });
+
+    var spriteBounds = Phaser.Geom.Rectangle.Inflate(Phaser.Geom.Rectangle.Clone(this.physics.world.bounds), -100, -100);
+
+    for(var i = 0; i< 10; i++){ 
+      var pos = new Phaser.Geom.Point(i * 64, i* 64);
+      var sheep = this.physics.add.sprite(pos.x, pos.y, 'sheep');
+      let rotation = Math.random() * Math.PI * 2;
+      sheep.setRotation(rotation);
+      let velocity = this.physics.velocityFromRotation(rotation);
+      sheep.setVelocity(velocity.x, velocity.y);
+      sheep.play('sheep_animation');
+    }
   }
 
   update(): void {
     this.keyboard!.update()
-    this.sheeps.forEach(sheep => sheep.moveRandom())
-    new SheepRenderUpdater().render(this.sheeps)
+
+    //this.sheeps.forEach(sheep => sheep.moveRandom())
+    //new SheepRenderUpdater().render(this.sheeps)
     new FarmerRenderUpdater().render(this.farmer!)
   }
 }
