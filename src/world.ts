@@ -1,5 +1,5 @@
 export class World {
-    
+
     private tiles: Tile[][]
 
     private maxX = 20
@@ -9,20 +9,28 @@ export class World {
         console.log("Init world")
 
         this.tiles = new Array<Array<Tile>>()
-        for(let i = 0; i < 20; i++) {
+        for (let i = 0; i < this.maxX; i++) {
             this.tiles[i] = new Array<Tile>()
-            for(let j = 0 ; j < 20; j++) {
-                this.tiles[i][j] = {tileType: TileType.GRASS}
+            for (let j = 0; j < this.maxY; j++) {
+                let type = this.getRandomTileType();
+                this.tiles[i][j] = { tileType: type }
             }
-        }        
+        }
     }
 
-    public getTile(c: Coordinate): Tile {
+    getTile(c: Coordinate): Tile {
         return this.tiles[c.x][c.y]
     }
 
-    public getTiles(): Array<Array<Tile>> {
+    getTiles(): Array<Array<Tile>> {
         return this.tiles
+    }
+
+    private getRandomTileType(): TileType {
+        const types = [TileType.GRASS, TileType.GRASSSHORT, TileType.GRASSGONE]
+        const options = types.length
+
+        return types[Math.floor(options * Math.random())]
     }
 }
 
@@ -36,15 +44,15 @@ export class Tile {
 
     constructor(tileType: TileType) {
         this.tileType = tileType
-    }     
+    }
 }
 
-export enum TileType {
+export const enum TileType {
     GRASS = "grass",
     GRASSSHORT = "grass_short",
     GRASSGONE = "grass_gone",
     WATER0 = "water_0",
-    WATER1 = "water_1",    
+    WATER1 = "water_1",
     WATERPAR = "water_parallel",
     WATERCOR = "water_corner",
     WATER3 = "water_3",

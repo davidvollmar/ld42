@@ -79,17 +79,17 @@ class WorldRenderer implements Renderer<World> {
 
 class SheepRenderer implements Renderer<Array<Sheep>> {
   render(scene: Phaser.Scene, sheeps: Array<Sheep>) {
+    scene.anims.create({
+      key: 'beehmation',
+      frames: scene.anims.generateFrameNames('sheep', { start: 0, end: 3 }),
+      frameRate: 6,
+      repeat: Phaser.FOREVER
+    });
+
     sheeps.forEach(sheep => {      
       let sprite = scene.add.sprite(sheep.getPosition().x, sheep.getPosition().y, 'sheep')
       sprite.setOrigin(0, 0)
       sprite.setRotation(sheep.getRotation() + Math.PI / 2.0)
-
-      let walk = scene.anims.create({
-        key: 'beehmation',
-        frames: scene.anims.generateFrameNames('sheep', { start: 0, end: 3 }),
-        frameRate: 6,
-        repeat: Phaser.FOREVER
-      });
 
       sprite.anims.play('beehmation')
 
