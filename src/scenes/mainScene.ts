@@ -71,7 +71,9 @@ export class MainScene extends Phaser.Scene {
   }
 
   create(): void {
-    this.farmer = new Farmer(this)
+    this.farmer = new Farmer(this)    
+    this.events.addListener('moveEvent', this.farmer.handleEvent, this.farmer)
+    
     Array.from(Array(10).keys()).forEach(i =>
       this.sheeps[i] = new Sheep(
         this,
