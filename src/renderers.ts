@@ -29,7 +29,8 @@ export class WorldRenderer {
                 let posY = y * this.tileSize
                 if (tile.hasFence && tile.fenceSprite == null) {
                     let fence = scene.add.sprite(posX, posY, TileType.FENCE)
-                    fence.setOrigin(0, 0)
+                    fence.setOrigin(0, 0);
+                    fence.setSize(128, 128);
                     tile.fenceSprite = fence
                 }
             }
