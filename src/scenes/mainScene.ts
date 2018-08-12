@@ -50,6 +50,7 @@ export class MainScene extends Phaser.Scene {
     this.pathFinder = new PathFinding(this.world)
     this.pathFinder.findPath({ x: 1, y: 1 }, { x: 10, y: 10 }).then(this.renderDebugPath.bind(this))
     WorldRenderer.render(this, this.world)
+    //WorldRenderer.renderFence(this, this.world)
     this.createPlayer();
     this.createSheeps()
     this.createWolfs()

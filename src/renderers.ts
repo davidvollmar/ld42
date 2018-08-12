@@ -34,7 +34,7 @@ export class WorldRenderer {
     }
 
     static renderFence(scene: Phaser.Scene, updateFences: Coordinate[], world: World) {
-        //let arrays = world.getTiles()
+        let first = true; 
 
         for (var i = 0; i < updateFences.length; i++) {
             let x = updateFences[i].x;
@@ -53,7 +53,13 @@ export class WorldRenderer {
                     tile.fenceSprite = fence
 
                     //recursively check neighbor situation and decide how to update fences
-                    this.updateFenceSprite({ x, y }, scene, world, false);
+                    if (first) {
+                        this.updateFenceSprite({ x, y }, scene, world, false);
+                        first = false;
+                    } else {
+                        //recursively check neighbor situation and decide how to update fences
+                        this.updateFenceSprite({ x, y }, scene, world, true);
+                    }
                 } else if (!tile.hasFence && tile.fenceSprite !== null) {
                     tile.fenceSprite.setVisible(false);
 
@@ -68,7 +74,7 @@ export class WorldRenderer {
     static updateFenceSprite(c: Coordinate, scene: Phaser.Scene, world: World, recCall: boolean) {
         let neighbours = this.getNeighbouringFences(c, world);
         let s = "";
-        for (var i = 0; i < neighbours.length; i++) {
+        for (let i = 0; i < neighbours.length; i++) {
             if (neighbours[i]) {
                 s += "1";
             } else {
@@ -80,79 +86,79 @@ export class WorldRenderer {
             case "0000":
                 break;
             case "0001":
-                if (!recCall) { this.updateFenceSprite({ x: c.x - 1, y: c.y }, scene, world, true) };
+                if (recCall) { this.updateFenceSprite({ x: c.x - 1, y: c.y }, scene, world, false) };
                 break;
             case "0010":
                 world.getTile(c)!.fenceSprite!.setTexture(TileType.FENCENS);
-                if (!recCall) { this.updateFenceSprite({ x: c.x, y: c.y + 1 }, scene, world, true) };
+                if (recCall) { this.updateFenceSprite({ x: c.x, y: c.y + 1 }, scene, world, false) };
                 break;
             case "0011":
                 world.getTile(c)!.fenceSprite!.setTexture(TileType.FENCECOR);
-                if (!recCall) { this.updateFenceSprite({ x: c.x - 1, y: c.y }, scene, world, true) };
-                if (!recCall) { this.updateFenceSprite({ x: c.x, y: c.y + 1 }, scene, world, true) };
+                if (recCall) { this.updateFenceSprite({ x: c.x - 1, y: c.y }, scene, world, false) };
+                if (recCall) { this.updateFenceSprite({ x: c.x, y: c.y + 1 }, scene, world, false) };
                 break;
             case "0100":
-                if (!recCall) { this.updateFenceSprite({ x: c.x + 1, y: c.y }, scene, world, true) };
+                if (recCall) { this.updateFenceSprite({ x: c.x + 1, y: c.y }, scene, world, false) };
                 break;
             case "0101":
-                if (!recCall) { this.updateFenceSprite({ x: c.x + 1, y: c.y }, scene, world, true) };
-                if (!recCall) { this.updateFenceSprite({ x: c.x - 1, y: c.y }, scene, world, true) };
+                if (recCall) { this.updateFenceSprite({ x: c.x + 1, y: c.y }, scene, world, false) };
+                if (recCall) { this.updateFenceSprite({ x: c.x - 1, y: c.y }, scene, world, false) };
                 break;
             case "0110":
                 world.getTile(c)!.fenceSprite!.setTexture(TileType.FENCECOR).setOrigin(1, 0).setAngle(270);
-                if (!recCall) { this.updateFenceSprite({ x: c.x + 1, y: c.y }, scene, world, true) };
-                if (!recCall) { this.updateFenceSprite({ x: c.x, y: c.y + 1 }, scene, world, true) };
+                if (recCall) { this.updateFenceSprite({ x: c.x + 1, y: c.y }, scene, world, false) };
+                if (recCall) { this.updateFenceSprite({ x: c.x, y: c.y + 1 }, scene, world, false) };
                 break;
             case "0111":
                 world.getTile(c)!.fenceSprite!.setTexture(TileType.FENCET).setOrigin(0, 0).setAngle(0);
-                if (!recCall) { this.updateFenceSprite({ x: c.x + 1, y: c.y }, scene, world, true) };
-                if (!recCall) { this.updateFenceSprite({ x: c.x, y: c.y + 1 }, scene, world, true) };
-                if (!recCall) { this.updateFenceSprite({ x: c.x - 1, y: c.y }, scene, world, true) };
+                if (recCall) { this.updateFenceSprite({ x: c.x + 1, y: c.y }, scene, world, false) };
+                if (recCall) { this.updateFenceSprite({ x: c.x, y: c.y + 1 }, scene, world, false) };
+                if (recCall) { this.updateFenceSprite({ x: c.x - 1, y: c.y }, scene, world, false) };
                 break;
 
             case "1000":
                 world.getTile(c)!.fenceSprite!.setTexture(TileType.FENCENS);
-                if (!recCall) { this.updateFenceSprite({ x: c.x, y: c.y - 1 }, scene, world, true) };
+                if (recCall) { this.updateFenceSprite({ x: c.x, y: c.y - 1 }, scene, world, false) };
                 break;
             case "1001":
                 world.getTile(c)!.fenceSprite!.setTexture(TileType.FENCECOR).setOrigin(0, 1).setAngle(90);
-                if (!recCall) { this.updateFenceSprite({ x: c.x - 1, y: c.y }, scene, world, true) };
-                if (!recCall) { this.updateFenceSprite({ x: c.x, y: c.y - 1 }, scene, world, true) };
+                if (recCall) { this.updateFenceSprite({ x: c.x - 1, y: c.y }, scene, world, false) };
+                if (recCall) { this.updateFenceSprite({ x: c.x, y: c.y - 1 }, scene, world, false) };
                 break;
             case "1010":
                 world.getTile(c)!.fenceSprite!.setTexture(TileType.FENCENS);
-                if (!recCall) { this.updateFenceSprite({ x: c.x, y: c.y - 1 }, scene, world, true) };
-                if (!recCall) { this.updateFenceSprite({ x: c.x, y: c.y + 1 }, scene, world, true) };
+                if (recCall) { this.updateFenceSprite({ x: c.x, y: c.y - 1 }, scene, world, false) };
+                if (recCall) { this.updateFenceSprite({ x: c.x, y: c.y + 1 }, scene, world, false) };
                 break;
             case "1011":
                 world.getTile(c)!.fenceSprite!.setTexture(TileType.FENCET).setOrigin(0, 1).setAngle(90);
-                if (!recCall) { this.updateFenceSprite({ x: c.x, y: c.y - 1 }, scene, world, true) };
-                if (!recCall) { this.updateFenceSprite({ x: c.x, y: c.y + 1 }, scene, world, true) };
-                if (!recCall) { this.updateFenceSprite({ x: c.x - 1, y: c.y }, scene, world, true) };
+                if (recCall) { this.updateFenceSprite({ x: c.x, y: c.y - 1 }, scene, world, false) };
+                if (recCall) { this.updateFenceSprite({ x: c.x, y: c.y + 1 }, scene, world, false) };
+                if (recCall) { this.updateFenceSprite({ x: c.x - 1, y: c.y }, scene, world, false) };
                 break;
             case "1100":
                 world.getTile(c)!.fenceSprite!.setTexture(TileType.FENCECOR).setOrigin(1, 1).setAngle(180);
-                if (!recCall) { this.updateFenceSprite({ x: c.x + 1, y: c.y }, scene, world, true) };
-                if (!recCall) { this.updateFenceSprite({ x: c.x, y: c.y - 1 }, scene, world, true) };
+                if (recCall) { this.updateFenceSprite({ x: c.x + 1, y: c.y }, scene, world, false) };
+                if (recCall) { this.updateFenceSprite({ x: c.x, y: c.y - 1 }, scene, world, false) };
                 break;
             case "1101":
                 world.getTile(c)!.fenceSprite!.setTexture(TileType.FENCET).setOrigin(1, 1).setAngle(180);
-                if (!recCall) { this.updateFenceSprite({ x: c.x, y: c.y - 1 }, scene, world, true) };
-                if (!recCall) { this.updateFenceSprite({ x: c.x + 1, y: c.y }, scene, world, true) };
-                if (!recCall) { this.updateFenceSprite({ x: c.x - 1, y: c.y }, scene, world, true) };
+                if (recCall) { this.updateFenceSprite({ x: c.x, y: c.y - 1 }, scene, world, false) };
+                if (recCall) { this.updateFenceSprite({ x: c.x + 1, y: c.y }, scene, world, false) };
+                if (recCall) { this.updateFenceSprite({ x: c.x - 1, y: c.y }, scene, world, false) };
                 break;
             case "1110":
                 world.getTile(c)!.fenceSprite!.setTexture(TileType.FENCET).setOrigin(1, 0).setAngle(270);
-                if (!recCall) { this.updateFenceSprite({ x: c.x, y: c.y - 1 }, scene, world, true) };
-                if (!recCall) { this.updateFenceSprite({ x: c.x + 1, y: c.y }, scene, world, true) };
-                if (!recCall) { this.updateFenceSprite({ x: c.x, y: c.y + 1 }, scene, world, true) };
+                if (recCall) { this.updateFenceSprite({ x: c.x, y: c.y - 1 }, scene, world, false) };
+                if (recCall) { this.updateFenceSprite({ x: c.x + 1, y: c.y }, scene, world, false) };
+                if (recCall) { this.updateFenceSprite({ x: c.x, y: c.y + 1 }, scene, world, false) };
                 break;
             case "1111":
                 world.getTile(c)!.fenceSprite!.setTexture(TileType.FENCECROSS);
-                if (!recCall) { this.updateFenceSprite({ x: c.x, y: c.y - 1 }, scene, world, true) };
-                if (!recCall) { this.updateFenceSprite({ x: c.x + 1, y: c.y }, scene, world, true) };
-                if (!recCall) { this.updateFenceSprite({ x: c.x, y: c.y + 1 }, scene, world, true) };
-                if (!recCall) { this.updateFenceSprite({ x: c.x - 1, y: c.y }, scene, world, true) };
+                if (recCall) { this.updateFenceSprite({ x: c.x, y: c.y - 1 }, scene, world, false) };
+                if (recCall) { this.updateFenceSprite({ x: c.x + 1, y: c.y }, scene, world, false) };
+                if (recCall) { this.updateFenceSprite({ x: c.x, y: c.y + 1 }, scene, world, false) };
+                if (recCall) { this.updateFenceSprite({ x: c.x - 1, y: c.y }, scene, world, false) };
                 break;
         }
     }
