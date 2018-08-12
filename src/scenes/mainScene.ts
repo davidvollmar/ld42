@@ -23,6 +23,8 @@ export class MainScene extends Phaser.Scene {
   private worldUpdateRequired = false
   private sheepCount = 100
   private wolfCount = 10
+  private renderDistance = 6;
+  private farmerSpeed = 250;
   private pathFinder: PathFinding | null = null
 
   constructor() {
@@ -72,7 +74,7 @@ export class MainScene extends Phaser.Scene {
   }
 
   createPlayer() {
-    this.player = this.physics.add.sprite(512, 2048, 'farmer-left', 0);
+    this.player = this.physics.add.sprite(512, 512, 'farmer-left', 0);
 
     this.anims.create({
       key: 'farmer_walk_left',
@@ -148,7 +150,7 @@ export class MainScene extends Phaser.Scene {
     //update world if needed
     let pos = { x: this.player!.x, y: this.player!.y }
     let tileCoordinates = WorldRenderer.worldToTileCoordinates(pos);
-    let tilesToRender = this.world.addMissingTilesInRadius(tileCoordinates, 3);
+    let tilesToRender = this.world.addMissingTilesInRadius(tileCoordinates, this.renderDistance);
     if (tilesToRender !== undefined) { WorldRenderer.renderTiles(this, tilesToRender); }
 
     //update sheep
@@ -162,8 +164,6 @@ export class MainScene extends Phaser.Scene {
     const key_a = this.key_a!
     const key_s = this.key_s!
     const key_d = this.key_d!
-
-    const speed = 150;
     const prevVelocity = player.body.velocity.clone();
 
     // Stop any previous movement from the last frame
@@ -171,16 +171,16 @@ export class MainScene extends Phaser.Scene {
 
     // Horizontal movement
     if (cursors.left.isDown || key_a.isDown) {
-      player.body.setVelocityX(-speed);
+      player.body.setVelocityX(-this.farmerSpeed);
     } else if (cursors.right.isDown || key_d.isDown) {
-      player.body.setVelocityX(speed);
+      player.body.setVelocityX(this.farmerSpeed);
     }
 
     // Vertical movement
     if (cursors.up.isDown || key_w.isDown) {
-      player.body.setVelocityY(-speed);
+      player.body.setVelocityY(-this.farmerSpeed);
     } else if (cursors.down.isDown || key_s.isDown) {
-      player.body.setVelocityY(speed);
+      player.body.setVelocityY(this.farmerSpeed);
     }
 
     // Fence placement
@@ -193,7 +193,7 @@ export class MainScene extends Phaser.Scene {
     }
 
     // Normalize and scale the velocity so that player can't move faster along a diagonal
-    player.body.velocity.normalize().scale(speed);
+    player.body.velocity.normalize().scale(this.farmerSpeed);
 
     // Update the animation last and give left/right animations precedence over up/down animations
     if (cursors.left.isDown || key_a.isDown) {

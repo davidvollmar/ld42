@@ -2,7 +2,7 @@ import { World, Coordinate } from './world'
 import { TileType, Tile } from './tile';
 
 export class WorldRenderer {
-    public static tileSize = 128
+    public static tileSize = 64
 
     static render(scene: Phaser.Scene, world: World) {
         this.renderTiles(scene, world.getTiles());
@@ -18,6 +18,8 @@ export class WorldRenderer {
                         let posX = x * this.tileSize
                         let posY = y * this.tileSize
                         let sprite = scene.add.sprite(posX, posY, tile.tileType);
+                        sprite.setSize(this.tileSize, this.tileSize);
+                        sprite.setDisplaySize(this.tileSize, this.tileSize);
                         sprite.setOrigin(0, 0);
                         sprite.setDepth(-100);
                         tile.tileSprite = sprite
@@ -43,7 +45,8 @@ export class WorldRenderer {
                 if (tile.hasFence && tile.fenceSprite == null) {
                     let fence = scene.add.sprite(posX, posY, TileType.FENCEWE)
                     fence.setOrigin(0, 0);
-                    fence.setSize(128, 128);
+                    fence.setSize(this.tileSize, this.tileSize);
+                    fence.setDisplaySize(this.tileSize, this.tileSize);
                     tile.fenceSprite = fence
 
                     //TODO recursively check neighbor situation and decide how to update fences
