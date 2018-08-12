@@ -21,11 +21,11 @@ export class World {
         for (let i = 0; i < this.initX; i++) {
             this.tiles[i] = new Array<Tile>()
             for (let j = 0; j < this.initY; j++) {
-                if (i == 0 && j == 0) {
-                    this.tiles[i][j] = new Tile(TileType.WATER0)
-                } else if (i == 0) {
+                if ((i == 1 && j == 1) || (i == 0 || j == 0)) {
+                    this.tiles[i][j] = new Tile(TileType.WATER0)                
+                } else if (i == 1) {
                     this.tiles[i][j] = new Tile(TileType.WATER1E)
-                } else if (j == 0) {
+                } else if (j == 1) {
                     this.tiles[i][j] = new Tile(TileType.WATER1S)
                 } else {
                     this.tiles[i][j] = new Tile(this.getRandomTileType());
@@ -34,7 +34,7 @@ export class World {
         }
 
         const boxSize = 10
-        const boxOrigin = { x: 1, y: 1 }
+        const boxOrigin = { x: 5, y: 5 }
         for (let i = boxOrigin.x; i < boxOrigin.x + boxSize; i++) {
             for (let j = boxOrigin.y; j < boxOrigin.y + boxSize; j++) {
                 if (i == boxOrigin.x ||
