@@ -28,6 +28,10 @@ export class Tile {
     placeFence() {
         this.hasFence = true;
     }
+
+    removeFence() {
+        this.hasFence = false;
+    }
 }
 
 export const enum Direction {

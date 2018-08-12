@@ -33,10 +33,9 @@ export class WorldRenderer {
         }
     }
 
-    static placeFence(scene: Phaser.Scene, world: World, first: boolean) {
+    /* Render everything when you run it for the first time */
+    static renderFenceFirstTime(scene: Phaser.Scene, world: World) {
         let arrays = world.getTiles()
-        
-
         for (let x = 0; x < arrays.length; x++) {
             let tiles = arrays[x]
             if (tiles !== undefined) {
@@ -52,16 +51,43 @@ export class WorldRenderer {
                             fence.setDisplaySize(this.tileSize, this.tileSize);
                             tile.fenceSprite = fence
 
-                            if (first) {
-                                this.updateFenceSprite({ x, y }, scene, world, false);
-        
-                            } else {
-                                //recursively check neighbor situation and decide how to update fences
-                                this.updateFenceSprite({ x, y }, scene, world, true);
-                            }
+                            this.updateFenceSprite({ x, y }, scene, world, false);
+
                         }
                     }
                 }
+            }
+        }
+    }
+
+    /* render only incrementally */
+    static renderFence(scene: Phaser.Scene, updateFences: Coordinate[], world: World) {
+        for (var i = 0; i < updateFences.length; i++) {
+            let x = updateFences[i].x;
+            let y = updateFences[i].y;
+            let tile = world.getTiles()[x][y];
+
+            if (tile !== undefined) {
+                let posX = x * this.tileSize
+                let posY = y * this.tileSize
+                if (tile.hasFence) {
+                    let fence = scene.add.sprite(posX, posY, TileType.FENCEWE)
+                    fence.setOrigin(0, 0);
+                    fence.setSize(this.tileSize, this.tileSize);
+                    fence.setDisplaySize(this.tileSize, this.tileSize);
+                    fence.setVisible(true);
+                    tile.fenceSprite = fence
+
+                    //recursively check neighbor situation and decide how to update fences
+                    this.updateFenceSprite({ x, y }, scene, world, true);
+
+                } else if (!tile.hasFence && tile.fenceSprite !== null) {
+                    tile.fenceSprite.setVisible(false);
+
+                    //recursively check neighbor situation and decide how to update fences
+                    this.updateFenceSprite({ x, y }, scene, world, false);
+                }
+
             }
         }
     }

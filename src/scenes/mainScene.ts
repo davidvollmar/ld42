@@ -1,5 +1,6 @@
-import { World } from '../world'
+import { World, Coordinate } from '../world'
 import { Sheep } from '../sheep'
+import { TileType, Tile } from '../tile'
 import { WorldRenderer } from '../renderers'
 import { Physics, Input } from 'phaser';
 import { PathFinding, Path } from '../pathfinding';
@@ -19,6 +20,7 @@ export class MainScene extends Phaser.Scene {
   private key_d: Input.Keyboard.Key | null = null;
   private player: Physics.Arcade.Sprite | null = null;
 
+  private updateFenceTiles: Array<Coordinate> = new Array();
   private worldUpdateRequired = false
   private sheepCount = 100
   private wolfCount = 10
@@ -47,8 +49,8 @@ export class MainScene extends Phaser.Scene {
   create(): void {
     this.pathFinder = new PathFinding(this.world)
     this.pathFinder.findPath({ x: 1, y: 1 }, { x: 10, y: 10 }).then(this.renderDebugPath.bind(this))
-    WorldRenderer.render(this, this.world)
-    WorldRenderer.placeFence(this, this.world, true)
+    WorldRenderer.render(this, this.world)    
+    WorldRenderer.renderFenceFirstTime(this, this.world)
     this.createPlayer();
     this.createSheeps()
     this.createWolfs()
@@ -141,8 +143,9 @@ export class MainScene extends Phaser.Scene {
   }
 
   update(): void {
-    if (this.worldUpdateRequired) {
-      WorldRenderer.placeFence(this, this.world, false)
+    if (this.worldUpdateRequired) {      
+      WorldRenderer.renderFence(this, this.updateFenceTiles, this.world)
+      this.updateFenceTiles = Array<Coordinate>();
     }
 
     this.updateFarmer()
@@ -190,8 +193,23 @@ export class MainScene extends Phaser.Scene {
       let tile = this.world.getTile(tileCoordinates)
       if(tile !== null && tile.canPlaceFence()) {
         tile.placeFence();
+
+        this.updateFenceTiles.push({x: tileCoordinates.x, y: tileCoordinates.y});
         this.worldUpdateRequired = true
       }
+    }
+
+    // Fence removing
+    if (cursors.shift.isDown) {
+      let pos = { x: player.x, y: player.y }
+      let tileCoordinates = WorldRenderer.worldToTileCoordinates(pos);
+      let tile = this.world.getTile(tileCoordinates)
+      if(tile !== null && tile.hasFence) {
+        tile.removeFence();
+        
+        this.updateFenceTiles.push({x: tileCoordinates.x, y: tileCoordinates.y});
+        this.worldUpdateRequired = true
+      } 
     }
 
     // Normalize and scale the velocity so that player can't move faster along a diagonal
