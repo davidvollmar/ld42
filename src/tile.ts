@@ -9,8 +9,16 @@ export class Tile {
         this.hasFence = false
     }
 
-    isPassable() : boolean {
-        if(this.hasFence) {
+    isPassable(): boolean {
+        if (this.hasFence) {
+            return false
+        } else {
+            return !Array(TileType.WATER0, TileType.WATER1N, TileType.WATER1E, TileType.WATER1S, TileType.WATER1W, TileType.WATER3, TileType.WATER4, TileType.WATERCOR, TileType.WATERPAR).some(t => t == this.tileType)
+        }
+    }
+
+    canPlaceFence(): boolean {
+        if (this.hasFence) {
             return false
         } else {
             return !Array(TileType.WATER0, TileType.WATER1N, TileType.WATER1E, TileType.WATER1S, TileType.WATER1W, TileType.WATER3, TileType.WATER4, TileType.WATERCOR, TileType.WATERPAR).some(t => t == this.tileType)

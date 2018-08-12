@@ -188,8 +188,10 @@ export class MainScene extends Phaser.Scene {
       let pos = { x: player.x, y: player.y }
       let tileCoordinates = WorldRenderer.worldToTileCoordinates(pos);
       let tile = this.world.getTile(tileCoordinates)
-      tile!.placeFence();
-      this.worldUpdateRequired = true
+      if(tile !== null && tile.canPlaceFence()) {
+        tile.placeFence();
+        this.worldUpdateRequired = true
+      }
     }
 
     // Normalize and scale the velocity so that player can't move faster along a diagonal
