@@ -14,7 +14,7 @@ export class World {
     private maxY = 100;
 
     constructor() {
-        console.log("Init world")
+        //console.log("Init world")
 
         this.tiles = new Array<Array<Tile>>();
 
@@ -97,27 +97,27 @@ export class World {
                             this.tiles[x] = new Array<Tile>();
                         }
                         let tileType = this.getRandomTileType();
-                        if (x == this.minX) {
-                            if (y == this.maxY || y == this.minY) {
+                        if (x <= this.minX + 1) {
+                            if (y >= this.maxY - 1 || y <= this.minY + 1 || x == this.minX) {
                                 tileType = TileType.WATER0;
                             } else {
                                 tileType = TileType.WATER1E;
                             }
-                        } else if (x == this.maxX) {
-                            if (y == this.maxY || y == this.minY) {
+                        } else if (x >= this.maxX + 1) {
+                            if (y >= this.maxY - 1 || y <= this.minY - 1 || x == this.maxX) {
                                 tileType = TileType.WATER0;
                             } else {
                                 tileType = TileType.WATER1W;
                             }
                         } else {
-                            if (y == this.minY) {
-                                if (x == this.minX || x == this.maxX) {
+                            if (y <= this.minY + 1) {
+                                if (x == this.minX || x == this.maxX || y == this.minY) {
                                     tileType = TileType.WATER0;
                                 } else {
                                     tileType = TileType.WATER1S;
                                 }
-                            } else if (y == this.maxY) {
-                                if (x == this.minX || x == this.maxX) {
+                            } else if (y >= this.maxY - 1) {
+                                if (x == this.minX || x == this.maxX || y == this.maxY) {
                                     tileType = TileType.WATER0;
                                 } else {
                                     tileType = TileType.WATER1N;
@@ -150,7 +150,7 @@ export class World {
         let tiles = this.getTilesFiltererd(neighbours, (tile: Tile ) => {
             return tile.canEat()
         })
-        console.log("buren", tiles)
+        //console.log("buren", tiles)
 
         if(tiles.length == 0) {
             let found = new Array<Coordinate>()           

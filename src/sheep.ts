@@ -24,8 +24,13 @@ export class Sheep extends Phaser.GameObjects.GameObject {
     }
 
     moveTo(c: Coordinate) {
-        console.log("moooving to ", c)
-        this.target = c
+        //console.log("moooving to ", c)
+        var path = new Phaser.Curves.Path(this.sprite.x, this.sprite.y).lineTo(c.x, c.y);
+        var follow = this.scene.add.follower(path, this.sprite.x, this.sprite.y, 'path');
+        follow.startFollow()
+        follow.setVisible(false);
+
+        //this.target = c
     }
 
     moveRandom() {

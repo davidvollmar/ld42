@@ -7,7 +7,6 @@ export class Farmer extends Phaser.GameObjects.GameObject {
 
     constructor(scene: Phaser.Scene) {
         super(scene, "farmerbob")
-        console.log("hoi ik ben boer bob")
         this.sprite = null
     }
 

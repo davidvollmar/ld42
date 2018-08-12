@@ -122,7 +122,7 @@ export class MainScene extends Phaser.Scene {
     });
 
     for (let i = 0; i < this.sheepCount; i++) {
-      let sheep = new Sheep(this, new Phaser.Geom.Point(i, i))
+      let sheep = new Sheep(this, new Phaser.Geom.Point(512+i, 512+i))
       this.sheeps.push(sheep)
     }
   }

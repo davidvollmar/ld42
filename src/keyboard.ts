@@ -1,4 +1,4 @@
-export class Keyboard {
+/*export class Keyboard {
     private scene: Phaser.Scene    
     private downKey: Phaser.Input.Keyboard.Key
     private upKey: Phaser.Input.Keyboard.Key
@@ -44,4 +44,4 @@ export class Keyboard {
             console.log('space')
           }
     }
-}
+}*/
