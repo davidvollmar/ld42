@@ -58,7 +58,11 @@ export class MainScene extends Phaser.Scene {
     this.load.image(TileType.WATERCOR, 'assets/Graphics/LandTiles/WaterCor.png')
     this.load.image(TileType.WATER3, 'assets/Graphics/LandTiles/Water3.png')
     this.load.image(TileType.WATER4, 'assets/Graphics/LandTiles/Water4.png')
-    this.load.image(TileType.FENCE, 'assets/Graphics/LandTiles/Fence.png')
+    this.load.image(TileType.FENCEWE, 'assets/Graphics/LandTiles/FenceWE.png')
+    this.load.image(TileType.FENCENS, 'assets/Graphics/LandTiles/FenceNS.png')
+    this.load.image(TileType.FENCET, 'assets/Graphics/LandTiles/FenceT.png')
+    this.load.image(TileType.FENCECOR, 'assets/Graphics/LandTiles/FenceCor.png')
+    this.load.image(TileType.FENCECROSS, 'assets/Graphics/LandTiles/FenceCross.png')
   }
 
   loadSpriteSheep() {
@@ -265,7 +269,7 @@ export class MainScene extends Phaser.Scene {
       let pos = { x: player.x, y: player.y }
       let tileCoordinates = WorldRenderer.worldToTileCoordinates(pos);
       let tile = this.world.getTile(tileCoordinates)
-      tile!.hasFence = true
+      tile!.placeFence();
       this.worldUpdateRequired = true
     }
 

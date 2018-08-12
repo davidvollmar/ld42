@@ -16,6 +16,10 @@ export class Tile {
             return !Array(TileType.WATER0, TileType.WATER1N, TileType.WATER1E, TileType.WATER1S, TileType.WATER1W, TileType.WATER3, TileType.WATER4, TileType.WATERCOR, TileType.WATERPAR).some(t => t == this.tileType)
         }
     }
+
+    placeFence() {
+        this.hasFence = true;
+    }
 }
 
 export const enum Direction {
@@ -38,5 +42,9 @@ export const enum TileType {
     WATERCOR = "water_corner",
     WATER3 = "water_3",
     WATER4 = "water_4",
-    FENCE = "fence"
+    FENCEWE = "fence_we",
+    FENCENS = "fence_ns",
+    FENCET = "fence_t",
+    FENCECOR = "fence_cor",
+    FENCECROSS = "fence_cross"
 }
