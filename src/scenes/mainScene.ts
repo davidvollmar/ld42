@@ -48,7 +48,7 @@ export class MainScene extends Phaser.Scene {
 
   create(): void {
     this.pathFinder = new PathFinding(this.world)
-    this.pathFinder.findPath({ x: 1, y: 1 }, { x: 10, y: 10 }).then(this.renderDebugPath.bind(this))
+    this.pathFinder.findPath({ x: 2, y: 2 }, { x: 12, y: 12 }).then(this.renderDebugPath.bind(this))
     WorldRenderer.render(this, this.world)    
     WorldRenderer.renderFenceFirstTime(this, this.world)
     this.createPlayer();
@@ -210,6 +210,8 @@ export class MainScene extends Phaser.Scene {
         this.updateFenceTiles.push({x: tileCoordinates.x, y: tileCoordinates.y});
         this.worldUpdateRequired = true
       } 
+      this.pathFinder!.updateWorld(this.world)
+      this.pathFinder!.findPath({ x: 2, y: 2 }, { x: 12, y: 12 }).then(this.renderDebugPath.bind(this))
     }
 
     // Normalize and scale the velocity so that player can't move faster along a diagonal

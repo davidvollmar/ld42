@@ -1,6 +1,7 @@
 import * as Easystar from "EasyStarjs"
 import { World, Coordinate } from "./world";
 import { Tile } from "./tile"
+import { WorldRenderer } from "./renderers";
 
 export class PathFinding {
     private easystar: Easystar.js
@@ -16,19 +17,16 @@ export class PathFinding {
         let grid = Array<Array<number>>()
         let tiles = world.getTiles()
 
-        for (let x = 0 ; x < tiles.length; x++) {
-            grid.push(new Array<number>())
-            for (let y = 0; y < tiles[x].length; y++) {
-                let tile = tiles[x][y]
-
-                if (tile.isPassable()) {
-                    grid[x].push(0)
-                } else {
-                    grid[x].push(1)
-                }
+        WorldRenderer.forEachGridTile(tiles, (tile: Tile, x: number, y: number) => {
+            if (grid[y] == undefined) {
+                grid.push(new Array<number>())
             }
-        }
-
+            if (tile.isPassable()) {
+                grid[y].push(0)
+            } else {
+                grid[y].push(1)
+            }
+        })
         return grid
     }
 
