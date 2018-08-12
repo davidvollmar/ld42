@@ -92,7 +92,7 @@ export class WorldRenderer {
                 if (!recCall) { this.updateFenceSprite({ x: c.x, y: c.y + 1 }, scene, world, true) };
                 break;
             case "0111":
-                world.getTile(c)!.fenceSprite!.setTexture(TileType.FENCET);
+                world.getTile(c)!.fenceSprite!.setTexture(TileType.FENCET).setOrigin(0,0).setAngle(0);
                 if (!recCall) { this.updateFenceSprite({ x: c.x + 1, y: c.y }, scene, world, true) };
                 if (!recCall) { this.updateFenceSprite({ x: c.x, y: c.y + 1 }, scene, world, true) };
                 if (!recCall) { this.updateFenceSprite({ x: c.x - 1, y: c.y }, scene, world, true) };
