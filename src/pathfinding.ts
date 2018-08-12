@@ -21,7 +21,7 @@ export class PathFinding {
             if (grid[y] == undefined) {
                 grid.push(new Array<number>())
             }
-            if (tile.isPassable()) {
+            if (tile !== null && tile !== undefined && tile.isPassable()) {
                 grid[y].push(0)
             } else {
                 grid[y].push(1)
