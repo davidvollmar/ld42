@@ -21,14 +21,16 @@ export class WorldRenderer {
 
     static renderTiles(scene: Phaser.Scene, arrays: Tile[][]) {
         this.forEachGridTile(arrays, (tile: Tile, x: number, y: number) => {
-            let posX = x * this.tileSize
-            let posY = y * this.tileSize
-            let sprite = scene.add.sprite(posX, posY, tile.tileType);
-            sprite.setSize(this.tileSize, this.tileSize);
-            sprite.setDisplaySize(this.tileSize, this.tileSize);
-            sprite.setOrigin(0, 0);
-            sprite.setDepth(-100);
-            tile.tileSprite = sprite
+            if(tile !== null && tile !== undefined) {
+                let posX = x * this.tileSize
+                let posY = y * this.tileSize
+                let sprite = scene.add.sprite(posX, posY, tile.tileType);
+                sprite.setSize(this.tileSize, this.tileSize);
+                sprite.setDisplaySize(this.tileSize, this.tileSize);
+                sprite.setOrigin(0, 0);
+                sprite.setDepth(-100);
+                tile.tileSprite = sprite
+            }
         })
     }
 
@@ -98,8 +100,6 @@ export class WorldRenderer {
             }
         }
 
-        console.log("checking for " + c.x + ", " + c.y + ": " + s);
-
         const sprite = world.getTile(c)!.fenceSprite!;
 
         if (sprite !== null) {
@@ -111,7 +111,6 @@ export class WorldRenderer {
                     if (recCall) { this.updateFenceSprite({ x: c.x - 1, y: c.y }, scene, world, false) };
                     break;
                 case "0010":
-                    console.log("setting NS for " + c.x + ", " + c.y + ": " + s);
                     sprite.setTexture(TileType.FENCENS).setOrigin(0, 0).setAngle(0);
                     if (recCall) { this.updateFenceSprite({ x: c.x, y: c.y + 1 }, scene, world, false) };
                     break;
