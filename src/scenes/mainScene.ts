@@ -5,6 +5,7 @@ import { WorldRenderer } from '../renderers'
 import { Physics, Input } from 'phaser';
 import { PathFinding, Path } from '../pathfinding';
 import { Wolf } from '../wolf'
+import { Loader } from '../loader'
 
 export class MainScene extends Phaser.Scene {
   private debug = true
@@ -39,93 +40,31 @@ export class MainScene extends Phaser.Scene {
   }
 
   preload(): void {
-    this.loadSpriteTiles()
-    this.loadSpriteSheep()
-    this.loadFarmer()
-    this.loadWolf()
-  }
-
-  loadSpriteTiles() {
-    this.load.image(TileType.GRASS, 'assets/Graphics/LandTiles/Grass.png')
-    this.load.image(TileType.GRASSSHORT, 'assets/Graphics/LandTiles/GrassShort.png')
-    this.load.image(TileType.GRASSGONE, 'assets/Graphics/LandTiles/GrassGone.png')
-    this.load.image(TileType.WATER0, 'assets/Graphics/LandTiles/Water0.png')
-    this.load.image(TileType.WATER1N, 'assets/Graphics/LandTiles/Water1N.png')
-    this.load.image(TileType.WATER1E, 'assets/Graphics/LandTiles/Water1E.png')
-    this.load.image(TileType.WATER1S, 'assets/Graphics/LandTiles/Water1S.png')
-    this.load.image(TileType.WATER1W, 'assets/Graphics/LandTiles/Water1W.png')
-    this.load.image(TileType.WATERPAR, 'assets/Graphics/LandTiles/WaterPar.png')
-    this.load.image(TileType.WATERCOR, 'assets/Graphics/LandTiles/WaterCor.png')
-    this.load.image(TileType.WATER3, 'assets/Graphics/LandTiles/Water3.png')
-    this.load.image(TileType.WATER4, 'assets/Graphics/LandTiles/Water4.png')
-    this.load.image(TileType.FENCEWE, 'assets/Graphics/LandTiles/FenceWE.png')
-    this.load.image(TileType.FENCENS, 'assets/Graphics/LandTiles/FenceNS.png')
-    this.load.image(TileType.FENCET, 'assets/Graphics/LandTiles/FenceT.png')
-    this.load.image(TileType.FENCECOR, 'assets/Graphics/LandTiles/FenceCor.png')
-    this.load.image(TileType.FENCECROSS, 'assets/Graphics/LandTiles/FenceCross.png')
-  }
-
-  loadSpriteSheep() {
-    let spritesheetconfig = {
-      frameWidth: 64,
-      frameHeight: 64,
-      startFrame: 0,
-      endFrame: 4,
-      margin: 0,
-      spacing: 0
-    };
-    this.load.spritesheet('sheep', 'assets/Graphics/Sheep.png', spritesheetconfig);
-  }
-
-  loadFarmer() {
-    let spritesheetconfig = {
-      frameWidth: 64,
-      frameHeight: 64,
-      startFrame: 0,
-      endFrame: 8,
-      margin: 0,
-      spacing: 0
-    };
-    this.load.spritesheet('farmer-left', 'assets/Graphics/farmer-left.png', spritesheetconfig);
-    this.load.spritesheet('farmer-right', 'assets/Graphics/farmer-right.png', spritesheetconfig);
-    this.load.spritesheet('farmer-up', 'assets/Graphics/farmer-up.png', spritesheetconfig);
-    this.load.spritesheet('farmer-down', 'assets/Graphics/farmer-down.png', spritesheetconfig);
-  }
-
-  loadWolf() {
-    let spritesheetconfig = {
-      frameWidth: 64,
-      frameHeight: 64,
-      startFrame: 0,
-      endFrame: 9,
-      margin: 0,
-      spacing: 0
-    };
-    this.load.spritesheet('wolf', 'assets/Graphics/Wolf.png', spritesheetconfig);
+    new Loader(this)
   }
 
   create(): void {
     this.pathFinder = new PathFinding(this.world)
-    this.pathFinder.findPath({x:1, y: 1}, {x: 10, y: 10}).then(this.renderDebugPath.bind(this))
+    this.pathFinder.findPath({ x: 1, y: 1 }, { x: 10, y: 10 }).then(this.renderDebugPath.bind(this))
     WorldRenderer.render(this, this.world)
-    this.createPlayer();    
+    this.createPlayer();
     this.createSheeps()
-    this.createWolf()
+    this.createWolfs()
   }
 
   renderDebugPath(path: Path) {
-    if(this.debug) {
-      let graphics = this.add.graphics({ lineStyle: { color: 0xFF00FF , width: 5} });
+    if (this.debug) {
+      let graphics = this.add.graphics({ lineStyle: { color: 0xFF00FF, width: 5 } });
       let size = WorldRenderer.tileSize
       graphics.setDepth(100)
-      for(let i = 0 ; i < path.length - 1; i++) {
+      for (let i = 0; i < path.length - 1; i++) {
         let p1 = path[i]
-        let p2 = path[i+1]
+        let p2 = path[i + 1]
         let line = new Phaser.Geom.Line(
-          size*p1.x+size/2,
-          size*p1.y+size/2, 
-          size*p2.x+size/2, 
-          size*p2.y+size/2
+          size * p1.x + size / 2,
+          size * p1.y + size / 2,
+          size * p2.x + size / 2,
+          size * p2.y + size / 2
         )
         graphics.strokeLineShape(line)
       }
@@ -159,10 +98,10 @@ export class MainScene extends Phaser.Scene {
       frameRate: 12,
       repeat: -1
     });
-    
+
     const camera = this.cameras.main;
     camera.startFollow(this.player);
-    
+
 
     this.cursors = this.input.keyboard.createCursorKeys();
     this.key_w = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.W);
@@ -171,7 +110,7 @@ export class MainScene extends Phaser.Scene {
     this.key_d = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.D);
   }
 
-  createSheeps() {    
+  createSheeps() {
     this.anims.create({
       key: 'sheep_animation',
       frames: this.anims.generateFrameNames('sheep', { start: 0, end: 3 }),
@@ -179,23 +118,13 @@ export class MainScene extends Phaser.Scene {
       repeat: Phaser.FOREVER
     });
 
-    // ??
-    Phaser.Geom.Rectangle.Inflate(Phaser.Geom.Rectangle.Clone(this.physics.world.bounds), -100, -100);
-
     for (let i = 0; i < this.sheepCount; i++) {
-      let pos = new Phaser.Geom.Point(i * 64, i * 64);
-      let sprite = this.physics.add.sprite(pos.x, pos.y, 'sheep');
-      let rotation = Math.random() * Math.PI * 2;
-      sprite.setRotation(rotation);
-      let velocity = this.physics.velocityFromRotation(rotation);
-      sprite.setVelocity(velocity.x, velocity.y);
-      sprite.play('sheep_animation');
-      let sheep = new Sheep(this, rotation, sprite)
+      let sheep = new Sheep(this, new Phaser.Geom.Point(i * 64, i * 64))
       this.sheeps.push(sheep)
     }
   }
 
-  createWolf() {
+  createWolfs() {
     this.anims.create({
       key: 'wolf_animation',
       frames: this.anims.generateFrameNames('wolf', { start: 0, end: 3 }),
@@ -203,31 +132,21 @@ export class MainScene extends Phaser.Scene {
       repeat: Phaser.FOREVER
     });
 
-    // ??
-    Phaser.Geom.Rectangle.Inflate(Phaser.Geom.Rectangle.Clone(this.physics.world.bounds), -100, -100);
-
     for (let i = 0; i < this.wolfCount; i++) {
-      let pos = new Phaser.Geom.Point(i * 64, i * 64);
-      let sprite = this.physics.add.sprite(pos.x, pos.y, 'wolf');
-      let rotation = Math.random() * Math.PI * 2;
-      sprite.setRotation(rotation);
-      let velocity = this.physics.velocityFromRotation(rotation);
-      sprite.setVelocity(velocity.x, velocity.y);
-      sprite.play('wolf_animation');
-      let wolf = new Wolf(this)
+      let wolf = new Wolf(this, new Phaser.Geom.Point(i * 20, i * 20))
       this.wolfs.push(wolf)
     }
   }
 
-  update(): void {    
-    if(this.worldUpdateRequired) {
+  update(): void {
+    if (this.worldUpdateRequired) {
       WorldRenderer.placeFence(this, this.world)
     }
 
     this.updateFarmer()
 
     //update world if needed
-    let pos = { x: this.player!.x, y: this.player!.y }    
+    let pos = { x: this.player!.x, y: this.player!.y }
     let tileCoordinates = WorldRenderer.worldToTileCoordinates(pos);
     let tilesToRender = this.world.addMissingTilesInRadius(tileCoordinates, 3);
     if (tilesToRender !== undefined) { WorldRenderer.renderTiles(this, tilesToRender); }
@@ -236,7 +155,7 @@ export class MainScene extends Phaser.Scene {
     this.sheeps.forEach(sheep => sheep.moveRandom())
   }
 
-  updateFarmer() {    
+  updateFarmer() {
     const cursors = this.cursors!
     const player = this.player!
     const key_w = this.key_w!
@@ -265,7 +184,7 @@ export class MainScene extends Phaser.Scene {
     }
 
     // Fence placement
-    if(cursors.space.isDown) {
+    if (cursors.space.isDown) {
       let pos = { x: player.x, y: player.y }
       let tileCoordinates = WorldRenderer.worldToTileCoordinates(pos);
       let tile = this.world.getTile(tileCoordinates)
@@ -278,13 +197,13 @@ export class MainScene extends Phaser.Scene {
 
     // Update the animation last and give left/right animations precedence over up/down animations
     if (cursors.left.isDown || key_a.isDown) {
-      player.anims.play("farmer_walk_left", true);      
+      player.anims.play("farmer_walk_left", true);
     } else if (cursors.right.isDown || key_d.isDown) {
-      player.anims.play("farmer_walk_right", true);      
+      player.anims.play("farmer_walk_right", true);
     } else if (cursors.up.isDown || key_w.isDown) {
-      player.anims.play("farmer_walk_up", true);      
+      player.anims.play("farmer_walk_up", true);
     } else if (cursors.down.isDown || key_s.isDown) {
-      player.anims.play("farmer_walk_down", true);      
+      player.anims.play("farmer_walk_down", true);
     } else {
       player.anims.stop();
 

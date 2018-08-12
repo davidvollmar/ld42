@@ -1,13 +1,17 @@
 import { Coordinate } from "./world";
 
 export class Sheep extends Phaser.GameObjects.GameObject {    
-    private rotation: number
     private sprite: Phaser.Physics.Arcade.Sprite
 
-    constructor(scene: Phaser.Scene, rotation: number, sprite: Phaser.Physics.Arcade.Sprite) {
+    constructor(scene: Phaser.Scene, pos: Phaser.Geom.Point) {
         super(scene, "beeh")        
-        this.rotation = rotation
-        this.sprite = sprite
+        
+        this.sprite = this.scene.physics.add.sprite(pos.x, pos.y, 'sheep');
+        let rotation = Math.random() * Math.PI * 2;
+        this.sprite.setRotation(rotation);
+        let velocity = this.scene.physics.velocityFromRotation(rotation);
+        this.sprite.setVelocity(velocity.x, velocity.y);
+        this.sprite.play('sheep_animation');
     }
 
     getSprite(): Phaser.Physics.Arcade.Sprite {
@@ -16,15 +20,15 @@ export class Sheep extends Phaser.GameObjects.GameObject {
 
     moveRandom() {
         let randomRotation = (Math.random() * 2 * Math.PI) / 100;
+        let rotation = this.sprite.rotation
         if (Math.random() < 0.5) {
-            this.rotation += randomRotation;
+            rotation += randomRotation;
         } else {
-            this.rotation -= randomRotation;
+            rotation -= randomRotation;
         }
 
-        let velocity = this.scene.physics.velocityFromRotation(this.rotation);
-        this.sprite.setRotation(this.rotation)
+        let velocity = this.scene.physics.velocityFromRotation(rotation);
+        this.sprite.setRotation(rotation)
         this.sprite.setVelocity(velocity.x, velocity.y);
-
     }
 }
