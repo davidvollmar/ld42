@@ -229,4 +229,8 @@ export class WorldRenderer {
         let y = Math.floor(c.y / this.tileSize)
         return { x, y }
     }
+
+    static toWorldCoords(c: Coordinate) : Coordinate {
+        return {x: c.x * this.tileSize, y: c.y * this.tileSize}
+    }
 }

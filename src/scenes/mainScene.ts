@@ -164,9 +164,8 @@ export class MainScene extends Phaser.Scene {
       let sheepPos = { x: sprite.x, y: sprite.y };
       let tileCoord = WorldRenderer.worldToTileCoordinates(sheepPos);
       if(!sheep.hasTarget()) {
-        let target = this.world.getClosestLotOfGrass(tileCoord)         
-        console.log(target)
-        sheep.moveTo(target);        
+        let target = this.world.getClosestLotOfGrass(tileCoord)                 
+        sheep.moveTo(WorldRenderer.toWorldCoords(target));        
       }
       
       if (Math.random() < 0.001) {
