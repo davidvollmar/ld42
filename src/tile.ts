@@ -34,7 +34,7 @@ export class Tile {
     }
 
     eat() {
-        if (this.tileType !== undefined && this.tileSprite !== undefined) {
+        if (this.tileType !== undefined && this.tileSprite !== null && this.tileSprite !== undefined) {
             switch (this.tileType) {
                 case TileType.GRASS:
                     this.tileType = TileType.GRASSSHORT;
