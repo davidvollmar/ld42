@@ -13,7 +13,7 @@ export class Tile {
         if(this.hasFence) {
             return false
         } else {
-            return !Array(TileType.WATER0, TileType.WATER1, TileType.WATER3, TileType.WATER4, TileType.WATERCOR, TileType.WATERPAR).some(t => t == this.tileType)
+            return !Array(TileType.WATER0, TileType.WATER1N, TileType.WATER1E, TileType.WATER1S, TileType.WATER1W, TileType.WATER3, TileType.WATER4, TileType.WATERCOR, TileType.WATERPAR).some(t => t == this.tileType)
         }
     }
 }
@@ -30,7 +30,10 @@ export const enum TileType {
     GRASSSHORT = "grass_short",
     GRASSGONE = "grass_gone",
     WATER0 = "water_0",
-    WATER1 = "water_1",
+    WATER1N = "water_1N",
+    WATER1E = "water_1E",
+    WATER1S = "water_1S",
+    WATER1W = "water_1W",
     WATERPAR = "water_parallel",
     WATERCOR = "water_corner",
     WATER3 = "water_3",

@@ -10,19 +10,23 @@ export class WorldRenderer {
 
     static renderTiles(scene: Phaser.Scene, arrays: Tile[][]) {
         for (var x = 0; x < arrays.length; x++) {
-            let tiles = arrays[x]
-            for (var y = 0; y < tiles.length; y++) {
-                let tile = tiles[y]
-                let posX = x * this.tileSize
-                let posY = y * this.tileSize
-                let sprite = scene.add.sprite(posX, posY, tile.tileType);
-                sprite.setOrigin(0, 0);
-                sprite.setDepth(-100);
-                tile.tileSprite = sprite
-                if (tile.hasFence && tile.fenceSprite == null) {
-                    tile.fenceSprite = scene.add.sprite(posX, posY, TileType.FENCE)
+            if(arrays[x] !== undefined) {
+                let tiles = arrays[x]
+                for (var y = 0; y < tiles.length; y++) {
+                    if(tiles[y] !== undefined) {
+                        let tile = tiles[y]
+                        let posX = x * this.tileSize
+                        let posY = y * this.tileSize
+                        let sprite = scene.add.sprite(posX, posY, tile.tileType);
+                        sprite.setOrigin(0, 0);
+                        sprite.setDepth(-100);
+                        tile.tileSprite = sprite
+                        if (tile.hasFence && tile.fenceSprite == null) {
+                            tile.fenceSprite = scene.add.sprite(posX, posY, TileType.FENCE)
+                        }
+                    }
                 }
-            }
+            }            
         }
     }
 

@@ -50,7 +50,10 @@ export class MainScene extends Phaser.Scene {
     this.load.image(TileType.GRASSSHORT, 'assets/Graphics/LandTiles/GrassShort.png')
     this.load.image(TileType.GRASSGONE, 'assets/Graphics/LandTiles/GrassGone.png')
     this.load.image(TileType.WATER0, 'assets/Graphics/LandTiles/Water0.png')
-    this.load.image(TileType.WATER1, 'assets/Graphics/LandTiles/Water1.png')
+    this.load.image(TileType.WATER1N, 'assets/Graphics/LandTiles/Water1N.png')
+    this.load.image(TileType.WATER1E, 'assets/Graphics/LandTiles/Water1E.png')
+    this.load.image(TileType.WATER1S, 'assets/Graphics/LandTiles/Water1S.png')
+    this.load.image(TileType.WATER1W, 'assets/Graphics/LandTiles/Water1W.png')
     this.load.image(TileType.WATERPAR, 'assets/Graphics/LandTiles/WaterPar.png')
     this.load.image(TileType.WATERCOR, 'assets/Graphics/LandTiles/WaterCor.png')
     this.load.image(TileType.WATER3, 'assets/Graphics/LandTiles/Water3.png')
@@ -222,8 +225,8 @@ export class MainScene extends Phaser.Scene {
     //update world if needed
     let pos = { x: this.player!.x, y: this.player!.y }    
     let tileCoordinates = WorldRenderer.worldToTileCoordinates(pos);
-    let needToRender = this.world.addMissingTilesInRadius(tileCoordinates, 6);
-    if (needToRender) { WorldRenderer.render(this, this.world); }
+    let tilesToRender = this.world.addMissingTilesInRadius(tileCoordinates, 3);
+    if (tilesToRender !== undefined) { WorldRenderer.renderTiles(this, tilesToRender); }
 
     //update sheep
     this.sheeps.forEach(sheep => sheep.moveRandom())

@@ -22,11 +22,11 @@ export class World {
             this.tiles[i] = new Array<Tile>()
             for (let j = 0; j < this.initY; j++) {
                 if(i == 0 && j == 0) {
-                    this.tiles[i][j] = new Tile(TileType.WATERCOR)
+                    this.tiles[i][j] = new Tile(TileType.WATER0)
                 } else if(i == 0 ) {
-                    this.tiles[i][j] = new Tile(TileType.WATER1)
+                    this.tiles[i][j] = new Tile(TileType.WATER1E)
                 } else if (j == 0) {
-                    this.tiles[i][j] = new Tile(TileType.WATER1)
+                    this.tiles[i][j] = new Tile(TileType.WATER1S)
                 } else {
                     this.tiles[i][j] = new Tile(this.getRandomTileType());
                 }
@@ -34,8 +34,15 @@ export class World {
         }
     }
 
+    addTile(c: Coordinate, t: TileType) {
+        if(this.tiles[c.x] === undefined) {
+            this.tiles[c.x] = new Array<Tile>();
+        }
+        this.tiles[c.x][c.y] = new Tile(t);
+    }
+
     getTile(c: Coordinate): Tile | null {
-        if((this.tiles[c.x] || [])[0] === undefined) {
+        if(this.tiles[c.x]  === undefined) {
             return null;
         } else {
             if(this.tiles[c.x][c.y] === undefined) {
@@ -50,8 +57,8 @@ export class World {
         return this.tiles
     }
 
-    addMissingTilesInRadius(coord: Coordinate, radius: integer): boolean {
-        let toReturn: boolean = false;
+    addMissingTilesInRadius(coord: Coordinate, radius: integer): Tile[][] {
+        let toReturn: Tile[][] = new Array<Array<Tile>>();
 
         for (var x = coord.x - radius; x < coord.x + radius; x++) {
             for (var y = coord.y - radius; y < coord.y + radius; y++) {              
@@ -60,9 +67,44 @@ export class World {
                     if(tile === null) {
                         if(this.tiles[x] === undefined) {                            
                             this.tiles[x] = new Array<Tile>();
-                        }                        
-                        this.tiles[x][y] = new Tile(this.getRandomTileType());
-                        toReturn = true;
+                        }
+                        let tileType = this.getRandomTileType();                   
+                        if(x == this.minX) {
+                            if(y == this.maxY || y == this.minY) {
+                                tileType = TileType.WATER0;
+                            } else {
+                                tileType = TileType.WATER1E;
+                            }
+                        } else if (x == this.maxX) {
+                            if(y == this.maxY || y == this.minY) {
+                                tileType = TileType.WATER0;
+                            } else {
+                                tileType = TileType.WATER1W;
+                            }
+                        } else {
+                            if(y == this.minY) {
+                                if(x == this.minX || x == this.maxX) {
+                                    tileType = TileType.WATER0;
+                                } else {
+                                    tileType = TileType.WATER1S;
+                                }
+                            } else if (y == this.maxY) {
+                                if(x == this.minX || x == this.maxX) {
+                                    tileType = TileType.WATER0;
+                                } else {
+                                    tileType = TileType.WATER1N;
+                                }
+                            } else {
+                                ///this is the default case, the tiletype is then ok at random
+                            }
+                        }
+
+                        this.addTile({x,y}, tileType);
+                        
+                        if(toReturn[x] === undefined) {
+                            toReturn[x] = new Array<Tile>();
+                        }
+                        toReturn[x][y] = new Tile(tileType);
                     }
                 }
             }
@@ -73,9 +115,7 @@ export class World {
 
     private getRandomTileType(): TileType {
         const types = [TileType.GRASS, TileType.GRASSSHORT, TileType.GRASSGONE]
-        const options = types.length
-
-        return types[Math.floor(options * Math.random())]
+        return Phaser.Math.RND.pick(types);
     }
 }
 
