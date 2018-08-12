@@ -33,9 +33,9 @@ export class WorldRenderer {
         }
     }
 
-    static placeFence(scene: Phaser.Scene, world: World) {
+    static placeFence(scene: Phaser.Scene, world: World, first: boolean) {
         let arrays = world.getTiles()
-        let first = true
+        
 
         for (let x = 0; x < arrays.length; x++) {
             let tiles = arrays[x]
@@ -54,6 +54,7 @@ export class WorldRenderer {
 
                             if (first) {
                                 this.updateFenceSprite({ x, y }, scene, world, false);
+        
                             } else {
                                 //recursively check neighbor situation and decide how to update fences
                                 this.updateFenceSprite({ x, y }, scene, world, true);

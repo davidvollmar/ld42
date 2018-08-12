@@ -48,7 +48,7 @@ export class MainScene extends Phaser.Scene {
     this.pathFinder = new PathFinding(this.world)
     this.pathFinder.findPath({ x: 1, y: 1 }, { x: 10, y: 10 }).then(this.renderDebugPath.bind(this))
     WorldRenderer.render(this, this.world)
-    WorldRenderer.placeFence(this, this.world)
+    WorldRenderer.placeFence(this, this.world, true)
     this.createPlayer();
     this.createSheeps()
     this.createWolfs()
@@ -142,7 +142,7 @@ export class MainScene extends Phaser.Scene {
 
   update(): void {
     if (this.worldUpdateRequired) {
-      WorldRenderer.placeFence(this, this.world)
+      WorldRenderer.placeFence(this, this.world, false)
     }
 
     this.updateFarmer()
