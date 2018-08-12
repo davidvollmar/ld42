@@ -122,7 +122,7 @@ export class MainScene extends Phaser.Scene {
     });
 
     for (let i = 0; i < this.sheepCount; i++) {
-      let sheep = new Sheep(this, new Phaser.Geom.Point(i * 64, i * 64))
+      let sheep = new Sheep(this, new Phaser.Geom.Point(i, i))
       this.sheeps.push(sheep)
     }
   }
@@ -164,10 +164,9 @@ export class MainScene extends Phaser.Scene {
       let sheepPos = { x: sprite.x, y: sprite.y };
       let tileCoord = WorldRenderer.worldToTileCoordinates(sheepPos);
       if(!sheep.hasTarget()) {
-        /*let target = this.world.getClosestLotOfGrass(tileCoord)         
+        let target = this.world.getClosestLotOfGrass(tileCoord)         
         console.log(target)
-        sheep.moveTo(target);
-        */
+        sheep.moveTo(target);        
       }
       
       if (Math.random() < 0.001) {

@@ -153,11 +153,17 @@ export class World {
         console.log("buren", tiles)
 
         if(tiles.length == 0) {
-            let found = new Array<Coordinate>()            
+            let found = new Array<Coordinate>()           
+            
+            for(let i = 0 ; i < neighbours.length; i++) {
+                let c = this.getClosestLotOfGrass(neighbours[i])                
+                found.push(c)
+                if(c != null) break;
+            }
+
 
             neighbours.forEach(nb => {
-                let c = this.getClosestLotOfGrass(nb)
-                found.push(c)
+
             })            
             return found[0]
         } else {
