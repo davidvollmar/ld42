@@ -1,6 +1,5 @@
 import { World, Coordinate } from '../world'
 import { Sheep } from '../sheep'
-import { TileType, Tile } from '../tile'
 import { WorldRenderer } from '../renderers'
 import { Physics, Input } from 'phaser';
 import { PathFinding, Path } from '../pathfinding';
