@@ -138,14 +138,7 @@ export class World {
 
     private getRandomTileType(): TileType {
         const types = [TileType.GRASS, TileType.GRASSSHORT, TileType.GRASSGONE]
-        let r = Math.random() * 10;
-        if (r < 2) {
-            return types[2];
-        } else if (r < 5) {
-            return types[1];
-        } else {
-            return types[0];
-        }
+        return Phaser.Math.RND.weightedPick(types);
     }
 }
 
