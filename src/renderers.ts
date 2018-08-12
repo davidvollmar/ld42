@@ -8,56 +8,48 @@ export class WorldRenderer {
         this.renderTiles(scene, world.getTiles());
     }
 
-    static renderTiles(scene: Phaser.Scene, arrays: Tile[][]) {
-        for (var x = 0; x < arrays.length; x++) {
-            if (arrays[x] !== undefined) {
-                let tiles = arrays[x]
-                for (var y = 0; y < tiles.length; y++) {
-                    if (tiles[y] !== undefined) {
-                        let tile = tiles[y]
-                        let posX = x * this.tileSize
-                        let posY = y * this.tileSize
-                        let sprite = scene.add.sprite(posX, posY, tile.tileType);
-                        sprite.setSize(this.tileSize, this.tileSize);
-                        sprite.setDisplaySize(this.tileSize, this.tileSize);
-                        sprite.setOrigin(0, 0);
-                        sprite.setDepth(-100);
-                        tile.tileSprite = sprite
-                        //this should never happen, since this should only be called for new, clean tiles
-                        /*if (tile.hasFence && tile.fenceSprite == null) {
-                            tile.fenceSprite = scene.add.sprite(posX, posY, TileType.FENCEWE)
-                        }*/
-                    }
+    static forEachGridTile<T>(arr: T[][], func: (field: T, x: number, y: number) => void) {
+        for (let x = 0; x < arr.length; x++) {
+            let tiles = arr[x]
+            if (tiles !== undefined) {
+                for (let y = 0; y < tiles.length; y++) {
+                    func(tiles[y], x, y)
                 }
             }
         }
     }
 
+    static renderTiles(scene: Phaser.Scene, arrays: Tile[][]) {
+        this.forEachGridTile(arrays, (tile: Tile, x: number, y: number) => {
+            let posX = x * this.tileSize
+            let posY = y * this.tileSize
+            let sprite = scene.add.sprite(posX, posY, tile.tileType);
+            sprite.setSize(this.tileSize, this.tileSize);
+            sprite.setDisplaySize(this.tileSize, this.tileSize);
+            sprite.setOrigin(0, 0);
+            sprite.setDepth(-100);
+            tile.tileSprite = sprite
+        })
+    }
+
     /* Render everything when you run it for the first time */
     static renderFenceFirstTime(scene: Phaser.Scene, world: World) {
         let arrays = world.getTiles()
-        for (let x = 0; x < arrays.length; x++) {
-            let tiles = arrays[x]
-            if (tiles !== undefined) {
-                for (let y = 0; y < tiles.length; y++) {
-                    let tile = tiles[y]
-                    if (tile !== undefined) {
-                        let posX = x * this.tileSize
-                        let posY = y * this.tileSize
-                        if (tile.hasFence && tile.fenceSprite == null) {
-                            let fence = scene.add.sprite(posX, posY, TileType.FENCEWE)
-                            fence.setOrigin(0, 0);
-                            fence.setSize(this.tileSize, this.tileSize);
-                            fence.setDisplaySize(this.tileSize, this.tileSize);
-                            tile.fenceSprite = fence
+        this.forEachGridTile(arrays, (tile: Tile, x: number, y: number) => {
+            if (tile !== undefined) {
+                let posX = x * this.tileSize
+                let posY = y * this.tileSize
+                if (tile.hasFence && tile.fenceSprite == null) {
+                    let fence = scene.add.sprite(posX, posY, TileType.FENCEWE)
+                    fence.setOrigin(0, 0);
+                    fence.setSize(this.tileSize, this.tileSize);
+                    fence.setDisplaySize(this.tileSize, this.tileSize);
+                    tile.fenceSprite = fence
 
-                            this.updateFenceSprite({ x, y }, scene, world, false);
-
-                        }
-                    }
+                    this.updateFenceSprite({ x, y }, scene, world, false);
                 }
             }
-        }
+        })
     }
 
     /* render only incrementally */
