@@ -55,12 +55,16 @@ export class World {
         this.tiles[c.x][c.y] = new Tile(t);
     }
 
-    getTile(c: Coordinate): Tile | null {
+    getTile(c: Coordinate): Tile {
+        if (c.x < 0 || c.y < 0) {
+            throw new RangeError("coordinate out of world bounds: " + c)
+        }
+
         if (this.tiles[c.x] === undefined) {
-            return null;
+            throw new RangeError("coordinate out of world bounds: " + c)
         } else {
             if (this.tiles[c.x][c.y] === undefined) {
-                return null;
+                throw new RangeError("coordinate out of world bounds: " + c)
             } else {
                 return this.tiles[c.x][c.y];
             }
@@ -86,8 +90,9 @@ export class World {
         for (var x = coord.x - radius; x < coord.x + radius; x++) {
             for (var y = coord.y - radius; y < coord.y + radius; y++) {
                 if (!(x < this.minX || x > this.maxX || y < this.minY || y > this.maxY)) {
-                    let tile = this.getTile({ x: x, y: y });
-                    if (tile === null) {
+                    try {
+                        this.getTile({ x: x, y: y });
+                    } catch (e) {
                         if (this.tiles[x] === undefined) {
                             this.tiles[x] = new Array<Tile>();
                         }
@@ -127,13 +132,73 @@ export class World {
                         if (toReturn[x] === undefined) {
                             toReturn[x] = new Array<Tile>();
                         }
-                        toReturn[x][y] = new Tile(tileType);
+                        toReturn[x][y] = new Tile(tileType)
                     }
                 }
             }
         }
 
         return toReturn;
+    }
+
+    getClosestLotOfGrass(from: Coordinate): Coordinate {
+        if (this.getTile(from).tileType == TileType.GRASS) {
+            return from
+        }
+
+        let neighbours = this.getNeighbours(from)
+        let tiles = this.getTilesFiltererd(neighbours, (tile: Tile ) => {
+            return tile.canEat()
+        })
+
+        if(tiles.length == 0) {
+            let found = new Array<Coordinate>()
+            neighbours.forEach(nb => {
+                let c = this.getClosestLotOfGrass(nb)
+                found.push(c)
+            })            
+            return found[0]
+        } else {
+            let grass = tiles[0]
+            grass.tile.tileSprite!.tint = 0xFF00FF
+            return grass.c
+        }        
+    }
+
+
+    private getTilesFiltererd(froms: Coordinate[], accepts: ((tile: Tile )=> boolean)): PlaceWithTile[] {
+        let tiles = new Array<PlaceWithTile>()
+        froms.forEach((c: Coordinate) => {
+            let tile = this.getTile(c)
+            if(accepts(tile)) {
+                tiles.push({c, tile})
+            }
+        })
+
+        return tiles
+    }
+
+    private getNeighbours(from: Coordinate): Coordinate[] {
+        let x = from.x
+        let y = from.y
+        let neighbours = Array<Coordinate>()
+
+        if (x > 1 && y > 1) {
+            neighbours.push({ x: x - 1, y: y - 1 })
+        }
+        if (x > 1) {
+            neighbours.push({ x: x - 1, y })
+            neighbours.push({ x: x - 1, y: y + 1 })
+        }
+        if (y > 1) {
+            neighbours.push({ x, y: y - 1 })
+            neighbours.push({ x: x + 1, y: y - 1 })
+        }
+        neighbours.push({ x: x + 1, y: y + 1 })
+        neighbours.push({ x, y: y + 1 })
+        neighbours.push({ x: x + 1, y })
+
+        return neighbours
     }
 
     private getRandomTileType(): TileType {
@@ -145,4 +210,9 @@ export class World {
 export interface Coordinate {
     x: integer,
     y: integer
+}
+
+interface PlaceWithTile {
+    c: Coordinate,
+    tile: Tile
 }

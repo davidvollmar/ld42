@@ -18,6 +18,10 @@ export class Sheep extends Phaser.GameObjects.GameObject {
         return this.sprite
     }
 
+    moveTo(c: Coordinate) {
+        
+    }
+
     moveRandom() {
         let randomRotation = (Math.random() * 2 * Math.PI) / 100;
         let rotation = this.sprite.rotation
