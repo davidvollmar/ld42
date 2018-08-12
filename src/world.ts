@@ -142,7 +142,7 @@ export class World {
     }
 
     getClosestLotOfGrass(from: Coordinate): Coordinate {
-        if (this.getTile(from).tileType == TileType.GRASS) {
+        if (this.getTile(from).canEat()) {
             return from
         }
 
@@ -150,9 +150,11 @@ export class World {
         let tiles = this.getTilesFiltererd(neighbours, (tile: Tile ) => {
             return tile.canEat()
         })
+        console.log("buren", tiles)
 
         if(tiles.length == 0) {
-            let found = new Array<Coordinate>()
+            let found = new Array<Coordinate>()            
+
             neighbours.forEach(nb => {
                 let c = this.getClosestLotOfGrass(nb)
                 found.push(c)

@@ -2,6 +2,7 @@ import { Coordinate } from "./world";
 
 export class Sheep extends Phaser.GameObjects.GameObject {    
     private sprite: Phaser.Physics.Arcade.Sprite
+    private target: Coordinate | null = null
 
     constructor(scene: Phaser.Scene, pos: Phaser.Geom.Point) {
         super(scene, "beeh")        
@@ -18,8 +19,13 @@ export class Sheep extends Phaser.GameObjects.GameObject {
         return this.sprite
     }
 
+    hasTarget() { 
+        return this.target != null
+    }
+
     moveTo(c: Coordinate) {
-        
+        console.log("moooving to ", c)
+        this.target = c
     }
 
     moveRandom() {

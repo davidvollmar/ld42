@@ -48,7 +48,7 @@ export class MainScene extends Phaser.Scene {
   create(): void {
     this.pathFinder = new PathFinding(this.world)
     this.pathFinder.findPath({ x: 2, y: 2 }, { x: 12, y: 12 }).then(this.renderDebugPath.bind(this))
-    WorldRenderer.render(this, this.world)    
+    WorldRenderer.render(this, this.world)
     WorldRenderer.renderFenceFirstTime(this, this.world)
     this.createPlayer();
     this.createSheeps()
@@ -142,7 +142,7 @@ export class MainScene extends Phaser.Scene {
   }
 
   update(): void {
-    if (this.worldUpdateRequired) {      
+    if (this.worldUpdateRequired) {
       WorldRenderer.renderFence(this, this.updateFenceTiles, this.world)
       this.updateFenceTiles = Array<Coordinate>();
 
@@ -160,12 +160,17 @@ export class MainScene extends Phaser.Scene {
     //update sheep
     this.sheeps.forEach(sheep => sheep.moveRandom())
     this.sheeps.forEach(sheep => {
-      let tileCoord = WorldRenderer.worldToTileCoordinates(pos);
-      console.log(this.world.getClosestLotOfGrass(tileCoord))
-      if(Math.random() < 0.001) {
-        let sprite = sheep.getSprite();
-        let pos = { x: sprite.x , y: sprite.y };
+      let sprite = sheep.getSprite();
+      let sheepPos = { x: sprite.x, y: sprite.y };
+      let tileCoord = WorldRenderer.worldToTileCoordinates(sheepPos);
+      if(!sheep.hasTarget()) {
+        /*let target = this.world.getClosestLotOfGrass(tileCoord)         
+        console.log(target)
+        sheep.moveTo(target);
+        */
+      }
       
+      if (Math.random() < 0.001) {
         this.world.eatGrass(tileCoord);
       }
     });
@@ -202,10 +207,10 @@ export class MainScene extends Phaser.Scene {
       let pos = { x: player.x, y: player.y }
       let tileCoordinates = WorldRenderer.worldToTileCoordinates(pos);
       let tile = this.world.getTile(tileCoordinates)
-      if(tile !== null && tile.canPlaceFence()) {
+      if (tile !== null && tile.canPlaceFence()) {
         tile.placeFence();
 
-        this.updateFenceTiles.push({x: tileCoordinates.x, y: tileCoordinates.y});
+        this.updateFenceTiles.push({ x: tileCoordinates.x, y: tileCoordinates.y });
         this.worldUpdateRequired = true
       }
     }
@@ -215,12 +220,12 @@ export class MainScene extends Phaser.Scene {
       let pos = { x: player.x, y: player.y }
       let tileCoordinates = WorldRenderer.worldToTileCoordinates(pos);
       let tile = this.world.getTile(tileCoordinates)
-      if(tile.hasFence) {
+      if (tile.hasFence) {
         tile.removeFence();
-        
-        this.updateFenceTiles.push({x: tileCoordinates.x, y: tileCoordinates.y});
+
+        this.updateFenceTiles.push({ x: tileCoordinates.x, y: tileCoordinates.y });
         this.worldUpdateRequired = true
-      } 
+      }
       this.pathFinder!.updateWorld(this.world)
       this.pathFinder!.findPath({ x: 2, y: 2 }, { x: 12, y: 12 }).then(this.renderDebugPath.bind(this))
     }
