@@ -21,6 +21,7 @@ export class MainScene extends Phaser.Scene {
   private player: Physics.Arcade.Sprite | null = null;
 
   private updateFenceTiles: Array<Coordinate> = new Array();
+  private eatenTiles: Array<Coordinate> = new Array();
   private worldUpdateRequired = false
   private sheepCount = 100
   private wolfCount = 10
@@ -146,6 +147,8 @@ export class MainScene extends Phaser.Scene {
     if (this.worldUpdateRequired) {      
       WorldRenderer.renderFence(this, this.updateFenceTiles, this.world)
       this.updateFenceTiles = Array<Coordinate>();
+
+      this.worldUpdateRequired = false;
     }
 
     this.updateFarmer()
@@ -158,6 +161,14 @@ export class MainScene extends Phaser.Scene {
 
     //update sheep
     this.sheeps.forEach(sheep => sheep.moveRandom())
+    this.sheeps.forEach(sheep => {
+      if(Math.random() < 0.001) {
+        let sprite = sheep.getSprite();
+        let pos = { x: sprite.x , y: sprite.y };
+        let tileCoord = WorldRenderer.worldToTileCoordinates(pos);
+        this.world.eatGrass(tileCoord);
+      }
+    });
   }
 
   updateFarmer() {

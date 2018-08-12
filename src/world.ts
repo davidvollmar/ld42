@@ -38,9 +38,9 @@ export class World {
         for (let i = boxOrigin.x; i < boxOrigin.x + boxSize; i++) {
             for (let j = boxOrigin.y; j < boxOrigin.y + boxSize; j++) {
                 if (i == boxOrigin.x ||
-                    i == boxOrigin.x + boxSize -1 ||
-                    j == boxOrigin.y || 
-                    j == boxOrigin.y + boxSize - 1                     
+                    i == boxOrigin.x + boxSize - 1 ||
+                    j == boxOrigin.y ||
+                    j == boxOrigin.y + boxSize - 1
                 ) {
                     this.tiles[i][j].hasFence = true
                 }
@@ -69,6 +69,15 @@ export class World {
 
     getTiles(): Tile[][] {
         return this.tiles
+    }
+
+    eatGrass(c: Coordinate) {
+        if (this.tiles[c.x] !== undefined) {
+            let tile = this.tiles[c.x][c.y];
+            if (tile !== undefined && tile.canEat()) {
+                tile.eat();
+            }
+        }
     }
 
     addMissingTilesInRadius(coord: Coordinate, radius: integer): Tile[][] {

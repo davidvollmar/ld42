@@ -25,6 +25,29 @@ export class Tile {
         }
     }
 
+    canEat(): boolean {
+        if (this.hasFence) {
+            return false
+        } else {
+            return !Array(TileType.WATER0, TileType.WATER1N, TileType.WATER1E, TileType.WATER1S, TileType.WATER1W, TileType.WATER3, TileType.WATER4, TileType.WATERCOR, TileType.WATERPAR, TileType.GRASSGONE).some(t => t == this.tileType)
+        }
+    }
+
+    eat() {
+        if (this.tileType !== undefined && this.tileSprite !== undefined) {
+            switch (this.tileType) {
+                case TileType.GRASS:
+                    this.tileType = TileType.GRASSSHORT;
+                    this.tileSprite!.setTexture(TileType.GRASSSHORT).setOrigin(0, 0).setAngle(0);
+                    break;
+                case TileType.GRASSSHORT:
+                    this.tileType = TileType.GRASSGONE;
+                    this.tileSprite!.setTexture(TileType.GRASSGONE).setOrigin(0, 0).setAngle(0);
+                    break;
+            }
+        }
+    }
+
     placeFence() {
         this.hasFence = true;
     }

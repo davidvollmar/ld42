@@ -44,6 +44,7 @@ export class WorldRenderer {
                 if (tile.hasFence && tile.fenceSprite == null) {
                     let fence = scene.add.sprite(posX, posY, TileType.FENCEWE)
                     fence.setOrigin(0, 0);
+                    fence.setDepth(-50);
                     fence.setSize(this.tileSize, this.tileSize);
                     fence.setDisplaySize(this.tileSize, this.tileSize);
                     tile.fenceSprite = fence
@@ -67,6 +68,7 @@ export class WorldRenderer {
                 if (tile.hasFence) {
                     let fence = scene.add.sprite(posX, posY, TileType.FENCEWE)
                     fence.setOrigin(0, 0);
+                    fence.setDepth(-50);
                     fence.setSize(this.tileSize, this.tileSize);
                     fence.setDisplaySize(this.tileSize, this.tileSize);
                     fence.setVisible(true);
