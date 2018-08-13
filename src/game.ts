@@ -13,7 +13,7 @@ const config: GameConfig = {
   physics: {
     default: 'arcade',
     arcade: {
-      gravity: { y:0 },
+      gravity: { y: 0 },
       debug: false
     }
   }
@@ -28,5 +28,5 @@ export class Game extends Phaser.Game {
 
 // when the page is loaded, create our game instance
 window.onload = () => {
-  var game = new Game(config);
+  new Game(config);
 };

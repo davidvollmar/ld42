@@ -29,7 +29,7 @@ export class PathFinding {
         })
         return grid
     }
-
+    
     updateWorld(world: World) {
         this.easystar.setGrid(this.makeGrid(world))
     }
